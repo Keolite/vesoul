@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Entity\Order;
 use App\Manager\CartManager;
 use App\Factory\OrderFactory;
+use App\Manager\MailManager;
 use App\Form\CartType;
 use App\Repository\AddressRepository;
 use App\Repository\BookRepository;
@@ -27,6 +28,7 @@ class VesoulEditionController extends AbstractController
     private GenreRepository $genreRepo;
     private AddressRepository $addressRepo;
     private OrderFactory $orderFactory;
+    private MailManager $mailManager;
 
     public function __construct(
         BookRepository $bookRepo,
@@ -34,7 +36,8 @@ class VesoulEditionController extends AbstractController
         AuthorRepository $authorRepo,
         AddressRepository $addressRepo,
         CartManager $cartManager,
-        OrderFactory $orderFactory
+        OrderFactory $orderFactory,
+        MailManager $mailManager
     ) {
         $this->bookRepo = $bookRepo;
         $this->genreRepo = $genreRepo;
@@ -42,6 +45,7 @@ class VesoulEditionController extends AbstractController
         $this->addressRepo = $addressRepo;
         $this->cartManager = $cartManager;
         $this->orderFactory = $orderFactory;
+        $this->mailManager = $mailManager;
     }
 
     /**
@@ -523,7 +527,6 @@ class VesoulEditionController extends AbstractController
             // - Let user choose delivery/billing address
             // - Update Cart Status from 'cart 'to 'Ordered' (?) once form
             //   validated
-            //
             // - Send email to admin so that he can process customer order
             // - Send email to user so he can see seller will take care of him
             // - Update Stocks
@@ -560,6 +563,7 @@ class VesoulEditionController extends AbstractController
             1, 0
         );
 
+        $this->mailManager->sendNewOrderMail($order);
 
         // render last order infos/confirmation
         return $this->render(
