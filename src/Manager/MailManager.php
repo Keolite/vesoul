@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\Order;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
 class MailManager
 {
@@ -22,7 +23,7 @@ class MailManager
     }
 
     /**
-     * @param Order $order
+     * @param  Order $order
      * @return void
      */
     public function sendNewOrderMail(Order $order): void
@@ -32,12 +33,33 @@ class MailManager
 
         // send mail to user
         $mail = (new TemplatedEmail())
-           ->from($admin)
-           ->to($user)
-           ->subject('Confirmation de votre commande')
-           ->htmlTemplate('email/user-confirm-order.html.twig');
+            ->from($admin)
+            ->to($user)
+            ->subject('Confirmation de votre commande')
+            ->htmlTemplate('email/user_order_confirmation.html.twig');
 
         $this->mailer->send($mail);
     }
 
+
+    /**
+     * @param  Order $order
+     * @return void
+     */
+    public function contactAdmin(Order $order): void
+    {
+        $admin = $this->adminEmailAddress;
+
+        // send mail to user
+        $mail = (new TemplatedEmail())
+            ->from(new Address($admin, 'Vesoul Edition'))
+            ->to(new Address($admin, 'Christian'))
+            ->subject('Nouvelle commande')
+            ->context([
+                'order' => $order
+            ])
+            ->htmlTemplate('email/admin_new_order.html.twig');
+
+        $this->mailer->send($mail);
+    }
 }

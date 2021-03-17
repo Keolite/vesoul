@@ -510,38 +510,43 @@ class VesoulEditionController extends AbstractController
         }
 
         // get user addresses and cart infos
-        $total = $cart->getTotal();
+        $total     = $cart->getTotal();
         $addresses = $this->addressRepo->findBy(['user' => $user]);
 
         // build/handle Order form
         $form = $this->createForm(CartType::class, $cart);
         $form->handleRequest($request);
 
-        // if form is ok ~> go on
+        // if form is ok
         if ($form->isSubmitted() && $form->isValid()) {
             $cart->setUser($user);
-            $cart->setUpdatedAt(new \DateTime());
+
+            // cart is saved and becomes an order
             $this->orderFactory->submit($cart);
             $this->cartManager->save($cart);
-            // - Show every Items
-            // - Let user choose delivery/billing address
-            // - Update Cart Status from 'cart 'to 'Ordered' (?) once form
-            //   validated
-            // - Send email to admin so that he can process customer order
-            // - Send email to user so he can see seller will take care of him
-            // - Update Stocks
-            //
+
+            // TODO: Update Stocks
+
+            // fetch order infos
+            $order = $this->getDoctrine()
+                          ->getRepository(Order::class)
+                          ->findUserLastOrder($user);
+
+            // send user/admin order infos
+            $this->mailManager->sendNewOrderMail($order);
+            $this->mailManager->contactAdmin($order);
+
             return $this->redirectToRoute('showConfirmation');
         }
 
         // render
         return $this->render(
             'vesoul-edition/order/order.html.twig', [
-            'user' => $user,
-            'addresses' => $addresses,
-            'cart' => $cart,
-            'total' =>$total,
-            'form' => $form->createView()
+                'user'      => $user,
+                'addresses' => $addresses,
+                'cart'      => $cart,
+                'total'     => $total,
+                'form'      => $form->createView()
             ]
         );
     }
@@ -549,26 +554,22 @@ class VesoulEditionController extends AbstractController
 
     /**
      * @Route("/confirmation", name="showConfirmation")
+     *
+     * @param  Security $security
+     * @return Response
      */
     public function showConfirmation(Security $security): Response
     {
-        // get last user's order
-        $order = $this->getDoctrine()->getRepository(Order::class)->findOneBy(
-            [
-            'user' => $security->getUser(),
-            'status' => 'new'
-            ], [
-            'id' => 'DESC'
-            ],
-            1, 0
-        );
+        $user = $security->getUser();
 
-        $this->mailManager->sendNewOrderMail($order);
+        // get last user's order
+        $order = $this->getDoctrine()
+                      ->getRepository(Order::class)
+                      ->findUserLastOrder($user);
 
         // render last order infos/confirmation
         return $this->render(
             'vesoul-edition/confirmation.html.twig', [
-            'controller_name' => 'FrontController',
             'order' => $order
             ]
         );

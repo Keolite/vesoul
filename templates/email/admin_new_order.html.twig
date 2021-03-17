@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{{ email.subject }}</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            background-color: #00bcd4;
+            color: #ffffff;
+            padding: 1.8rem 0;
+            font-weight: normal;
+        }
+        hr {
+            border: none;
+            border-top: 3px solid #264459;
+            margin: 1.2rem;
+        }
+        .container {
+            background-color: #fefefe;
+            width: 100%;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+        .bottom {
+            background-color: #efefee;
+        }
+        .block {
+            margin: 0;
+            padding: 0.8rem 1.2rem 1.2rem 1.2rem;
+        }
+        .logo {
+            max-width: 250px;
+            width: 50%:
+        }
+        .text-center {
+            text-align: center;
+        }
+        .btn {
+            margin: 2rem 0;
+            display: inline-block;
+            padding: 0.8rem 1.2rem;
+            background-color: #00bcd4;
+            color: #fefefe;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="body">
+    <div class="container">
+
+        <div class="header text-center">
+            <a href="{{ url('home') }}">
+                <img src="{{ absolute_url(asset('build/images/book-open.png')) }}"
+                     class="logo" alt="Logo">
+            </a>
+        </div>
+
+        <div class="content">
+            <h1 class="text-center">{{ email.subject }}</h1>
+
+            <p class="block">
+                Bonjour {{ email.toName }}<br>
+                <strong>Une nouvelle commmande vient d'être créée</strong>.<br><br>
+                En cliquant sur ce lien vous serez redirigé vers la page de
+                gestion des commandes utilisateurs.
+            </p>
+
+            <div class="text-center">
+                <a href="{{ url('dashboard_admin_orders') }}" class="btn ">
+                    Commandes
+                </a>
+            </div>
+
+            <p class="block">
+            Commande N° {{ order.id }} <br>
+
+            <ul>
+                {% for item in order.items %}
+                <li>
+                    {{ item.book.author.firstname }}
+                    {{ item.book.author.lastname }} :
+                    {{ item.book.title }}
+                </li>
+                {% endfor%}
+            </ul>
+
+            </p>
+
+            <p class="block">
+            Vous pouvez également télécharger la facture en cliquant ci-dessous.
+            </p>
+
+            <div class="text-center">
+                <a href="{{ absolute_url(path('dashboard_user_print_bill', {'id': order.id})) }}" class="btn">
+                    Facture
+                </a>
+            </div>
+
+
+            <p class="block">
+                Cordialement,<br><br>
+                <em>Votre fidèle serveur</em>.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
+
