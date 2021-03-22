@@ -48,9 +48,9 @@
         .expand-button:hover{
             cursor: pointer;
             opacity: 0.5;
-            transition: all 0.3s; 
+            transition: all 0.3s;
         }
-    
+
         .filter-section{
             display: none !important;
             height: 0;
@@ -102,14 +102,11 @@
             font-weight: bold;
         }
 
-        .custom-select {
-            width: 150px;
-        }
         #sort-select{
             width: 200px
         }
 
-        
+
     }
     .book-card{
         background-color: white;

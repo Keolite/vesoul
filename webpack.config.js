@@ -18,6 +18,7 @@ Encore
     // Activer TS
     .enableTypeScriptLoader()
     // Activer jQuery
+    .autoProvidejQuery()
     .autoProvideVariables({
         $: 'jquery',
         jQuery: 'jquery',

@@ -62,7 +62,7 @@ class CartType extends AbstractType
                         ->setParameter('user', $user);
                 },
                 'attr' => [
-                    'class' => 'selectpicker custom-select',
+                    'class' => 'selectpicker',
                     'data-style' => 'btn-outline-secondary'
                 ]
                 ]
@@ -83,7 +83,7 @@ class CartType extends AbstractType
                         ->setParameter('user', $user);
                 },
                 'attr' => [
-                    'class' => 'selectpicker custom-select',
+                    'class' => 'selectpicker',
                     'data-style' => 'btn-outline-secondary'
                 ]
                 ]

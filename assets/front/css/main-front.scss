@@ -2,7 +2,9 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
 @import url('https://fonts.googleapis.com/css?family=Work+Sans');
 @import url('https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap';
+@import '~bootstrap-select/dist/css/bootstrap-select.min.css';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
 
 $color-main: #00BCD4;
 $color-container: #EDEDED;
@@ -28,6 +30,7 @@ $font-main: 'Work Sans', sans-serif;
 @import "confirmation";
 @import 'inscription';
 @import 'loader';
+@import 'toasts';
 
 @mixin empty-space($height: 16px, $width: 16px) {
   height: $height;
@@ -65,7 +68,7 @@ $font-main: 'Work Sans', sans-serif;
       display: none;
     }
   }
-  
+
   /* Hide the browser's default checkbox */
   .check-container input {
     position: absolute;
@@ -74,23 +77,23 @@ $font-main: 'Work Sans', sans-serif;
     height: 0;
     width: 0;
   }
-  
-  
+
+
   /* On mouse-over, add a grey background color */
   .check-container:hover input ~ .checkmark {
     background-color: #ccc;
   }
-  
+
   /* When the checkbox is checked, add a blue background */
   .check-container input:checked ~ .checkmark {
     background-color: $color-main;
   }
-  
+
   /* Show the checkmark when checked */
   .check-container input:checked ~ .checkmark:after {
     display: block;
   }
-  
+
   /* Style the checkmark/indicator */
   .check-container .checkmark:after {
     left: 9px;
@@ -102,7 +105,7 @@ $font-main: 'Work Sans', sans-serif;
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
-  } 
+  }
 //===========================================
 // Custom RADIO =============================
  /* Customize the label (the container) */
@@ -133,7 +136,7 @@ $font-main: 'Work Sans', sans-serif;
       }
     }
   }
-  
+
   /* Hide the browser's default radio button */
   .radio-container input {
     position: absolute;
@@ -142,22 +145,22 @@ $font-main: 'Work Sans', sans-serif;
     height: 0;
     width: 0;
   }
-  
+
   /* On mouse-over, add a grey background color */
   .radio-container:hover input ~ .checkmark {
     background-color: #ccc;
   }
-  
+
   /* When the radio button is checked, add a blue background */
   .radio-container input:checked ~ .checkmark {
     background-color: $color-main;
   }
-  
+
   /* Show the indicator (dot/circle) when checked */
   .radio-container input:checked ~ .checkmark:after {
     display: block;
   }
-  
+
   /* Style the indicator (dot/circle) */
   .radio-container .checkmark:after {
     top: 9px;
@@ -166,7 +169,7 @@ $font-main: 'Work Sans', sans-serif;
     height: 8px;
     border-radius: 50%;
     background: white;
-  } 
+  }
 //===========================================
 #year-slider{
   padding-left: 15px;

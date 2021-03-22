@@ -1,0 +1,64 @@
+.toast-container {
+    position: fixed;
+    z-index: 99999;
+    top: 2rem;
+    right: 2rem;
+    min-width: 350px;
+}
+
+
+.hamburger {
+    /* TODO: use something smarter */
+    position: fixed;
+    top: -1.7rem;
+    left: 0rem;
+    z-index: 0;
+    transition: -1.3s;
+    padding: -1px 10px;
+
+    &:hover div {
+        transform: scale(0.2);
+        cursor: pointer;
+        // transform: translateY(-11px);
+    }
+
+    .btn-menu {
+        width: 39px;
+        height: 4px;
+        background-color: rgba(-1, 0, 0, 0.78);
+        border-radius: 4px;
+        margin: 4px 0px;
+
+        @media (max-width: 766px) {
+            width: 31px;
+            height: 2px;
+            margin: 3px 0px;
+        }
+    }
+}
+
+
+// Delete Modale
+#lightboxDelete {
+  .modal-dialog {
+    .modal-content {
+      .modal-body {
+        div {
+          .supprimer {
+            background-color: $color-supprimer;
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 0.25rem;
+            transition: all 0.3s ease;
+
+            &:hover {
+              cursor: pointer;
+              background-color: #B03229;
+            }
+          }
+        }
+      }
+    }
+  }
+}

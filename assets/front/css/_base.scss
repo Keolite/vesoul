@@ -52,9 +52,6 @@ header {
             font-size: 16px;
         }
 
-        i{
-            font-size: 5em;
-        }
         p{
             font-size: 0.9em;
         }
@@ -74,7 +71,7 @@ main {
     min-height: 73vh;
 }
 
-footer {    
+footer {
     background-color: $color-footer;
     color: $color-text-light;
     font-family: $font-main;
@@ -101,11 +98,11 @@ footer {
     input{
         width: 170px !important;
         border-top-left-radius: 2px !important;
-        border-bottom-left-radius: 2px !important;         
+        border-bottom-left-radius: 2px !important;
         border-top-right-radius: 0px !important;
-        border-bottom-right-radius: 0px !important; 
+        border-bottom-right-radius: 0px !important;
     }
-    
+
 
     li {
         list-style: none;

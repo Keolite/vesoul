@@ -40,24 +40,6 @@ function hideModal(el){
 }
 
 
-// Auto close alerts
-const closeAlerts = () => {
-    setTimeout(function() {
-        $(".alert").alert('close');
-    }, 1000);
-}
-
-
-// During seconds, show the first hidden (d-none) element
-// having an alert-success class
-const showSuccess = (seconds = 2000) => {
-    console.log('show success message')
-    setTimeout( function() {
-    console.log('hide success message')
-    }, seconds)
-}
-
-
 // Send deletion order to the server
 async function sendDeleteOrder(url) {
     let {status} = await fetch(url, {method: 'POST'})
@@ -341,7 +323,6 @@ if (cancelBtn !== null) {
 // Once DOM is loaded, we do our job
 document.addEventListener("DOMContentLoaded", () => {
     checkDelLinks();
-    closeAlerts();
     updateInputLabel();
     checkImgDelLinks();
     checkAddAuthor();

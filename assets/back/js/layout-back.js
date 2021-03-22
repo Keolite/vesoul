@@ -1,14 +1,13 @@
-require('../../../node_modules/jquery/dist/jquery.slim.js');
-require('../../../node_modules/popper.js/dist/popper.min.js');
-require('../../../node_modules/bootstrap/dist/js/bootstrap.js');
-require('../../../node_modules/bootstrap/dist/css/bootstrap.min.css');
-require('../../../node_modules/bootstrap-select/js/bootstrap-select.js');
-require('../../../node_modules/bootstrap-select/sass/bootstrap-select.scss');
-require('../../../node_modules/bootstrap-select/sass/variables.scss');
-require('../../../node_modules/slick-carousel/slick/slick.css')
-require('../../../node_modules/slick-carousel/slick/slick-theme.css')
-require('../../../node_modules/slick-carousel/slick/slick.min.js')
-require('../css/main-back.scss');
-require('./main-back.ts');
-require('./carousel.js');
-require('./multi-select');
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
+import 'bootstrap-select/js/bootstrap-select';
+import 'slick-carousel';
+import 'air-datepicker';
+import '@fortawesome/fontawesome-free';
+
+import '../css/main-back.scss';
+import './main-back.ts';
+import './carousel.js';
+import './multi-select.js';
+import './toasts.js';

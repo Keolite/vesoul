@@ -39,7 +39,7 @@ class UserType extends AbstractType
                     'class' => 'font-weight-bold'
                 ],
                 'attr' => [
-                    'class' => 'form-control custom-select',
+                    'class' => 'form-control',
                 ]
                 ]
             )

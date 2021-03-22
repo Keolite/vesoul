@@ -1,7 +1,11 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~bootstrap-select/dist/css/bootstrap-select.min.css';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
 @import 'menuDashboard';
 @import 'content';
 @import 'book-crud';
-@import "~bootstrap/scss/bootstrap";
+@import 'components';
 
 html, body {
     margin: 0;

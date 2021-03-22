@@ -1,13 +1,16 @@
+// handle toasts
+window.addEventListener('DOMContentLoaded', () => {
+    $('.toast').toast('show');
+});
 
 
 
-window.addEventListener('DOMContentLoaded', (e) => {
-  
+window.addEventListener('DOMContentLoaded', () => {
   fetchBooks();
   ticking = true;
 });
 
-window.addEventListener('scroll', function (e) {
+window.addEventListener('scroll', function () {
   pageHeight = document.querySelector('.wrapper').offsetHeight;
   footer = document.querySelector('footer').offsetHeight;
   windowHeight = window.innerHeight;
@@ -22,28 +25,28 @@ window.addEventListener('scroll', function (e) {
   }
 });
 
-function onScrollFetch() {    
+function onScrollFetch() {
   if( page <= totalPages ){
     if(ticking === false){
       loader.classList.add("loader-on");
       fetchBooks();
-    } 
-  } 
+    }
+  }
 }
 
 function fetchBooks() {
-  
+
   if(ticking === false){
     fetch(`home/load?page=${page}`, {
         method: 'GET'
       })
-      .then(res => {      
+      .then(res => {
         const totalBooks = res.headers.get('X-TotalBooks');
         totalPages = res.headers.get('X-TotalPage');
         elTotalBooks = document.querySelector('#totalPage')
         elTotalBooks.innerHTML = totalBooks;
         return res.text();
-        
+
       })
       .then(res => {
 
@@ -51,13 +54,13 @@ function fetchBooks() {
           loader.classList.remove("loader-on");
 
         }
-        
-        
+
+
         wrapperBooks.innerHTML+= res;
         ticking = false;
         page++;
-        
-        
+
+
       })
       .catch(err => {
         if (err) throw err;

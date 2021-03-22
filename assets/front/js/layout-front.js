@@ -1,12 +1,14 @@
-require('../../../node_modules/jquery/dist/jquery.slim.js');
-require('../../../node_modules/popper.js/dist/popper.min.js');
-require('../../../node_modules/bootstrap/dist/js/bootstrap.js');
-require('../../../node_modules/bootstrap/dist/css/bootstrap.min.css');
-require('../css/main-front.scss');
-require('../../../node_modules/air-datepicker/dist/css/datepicker.min.css');
-require('../../../node_modules/air-datepicker/dist/js/datepicker');
-require('../../../node_modules/air-datepicker/dist/js/i18n/datepicker.fr');
-require('./connexion-client.js');
-require('./user-panel.ts');
-require('./dashboard-user.js');
-require('./home.js');
+import 'jquery';
+import 'popper.js';
+import 'bootstrap';
+import 'bootstrap-select/js/bootstrap-select';
+import 'slick-carousel';
+import 'air-datepicker';
+import '@fortawesome/fontawesome-free';
+
+import '../css/main-front.scss';
+import './connexion-client.js';
+import './user-panel.ts';
+import './dashboard-user.js';
+import './home.js';
+import './lazy-load.js';
