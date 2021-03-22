@@ -467,7 +467,8 @@ function resetFilter(){
 
 
   //on recharge la page
-  orderBy = itemList.value;
+  // if no order specified, keep descYear order
+  itemList.value === "" ? orderBy = "descYear" : orderBy = itemList.value;
   page = 1;
 
   wrapperBooks.innerHTML = '';
