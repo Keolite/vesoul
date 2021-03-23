@@ -40,18 +40,16 @@
                     {# ======== Login ======== #}
                     {% if is_granted('ROLE_ADMIN') %}
                         <a class="m-0 pr-3" href="{{ path('logout') }}">Deconnexion</a>
-                        <a class="m-0 pr-3" href="{{ path('dashboard_admin_home') }}"><i
-                                    class="fas fa-user user-icon p-2 m-0"></i></a>
-
+                        <a class="m-0 pr-3" href="{{ path('dashboard_admin_home') }}">
+                            <i class="fas fa-2x fa-user-circle"></i>
+                        </a>
                     {% elseif is_granted('ROLE_USER') %}
                         <a class="m-0 pr-3" href="{{ path('logout') }}">Deconnexion</a>
-                        <a class="m-0 pr-3" href="{{ path('dashboard_user_informations') }}"><i
-                                    class="fas fa-user user-icon p-2 m-0"></i></a>
-
+                        <a class="m-0 pr-3" href="{{ path('dashboard_user_informations') }}">
+                            <i class="fas fa-2x fa-user-circle"></i>
+                        </a>
                     {% else %}
                         <a class="m-0 pr-3" href="{{ path('login') }}">Connexion</a>
-                        <i class="fas fa-user user-icon p-2 m-0"></i>
-
                     {% endif %}
 
                     {# ======== Cart ======== #}
