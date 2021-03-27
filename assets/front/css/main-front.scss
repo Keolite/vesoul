@@ -207,3 +207,16 @@ $font-main: 'Work Sans', sans-serif;
 .empty-span {
   @include empty-space();
 }
+
+div .badge-filter {
+    padding: 0 0.5rem;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    > p {
+        margin: 0 0.5rem 0 0;
+        padding: 0;
+
+    }
+}
