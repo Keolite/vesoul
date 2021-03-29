@@ -7,6 +7,7 @@ const filterButtons = document.querySelectorAll('.expand-button');
 const genre = document.querySelector('#genre-list');
 const author = document.querySelector('#author-list');
 const checksFilter = document.querySelectorAll('#genre-list .form-check-input, #author-list .form-check-input ');
+const zoneBadge = document.querySelector('#badges');
 const genreButton = document.querySelector('#expand-genre');
 const authorButton = document.querySelector('#expand-author');
 const slider = document.querySelector('#year-slider');
@@ -169,73 +170,45 @@ if( checkNews !== null ){
   })
 }
 
-//=============================================
-//Sur clique des cases genres
-for( let item of checksFilter){
-  item.addEventListener('change', (evt)=>{
 
-    const  elChecked = evt.currentTarget;
-    let choiceId = elChecked.getAttribute('id');
-    let  typeFilter = elChecked.dataset.type;
-    const zoneBadge = document.querySelector('#badges');
-
-    if( elChecked.checked ){
-
-      filter[typeFilter].push(choiceId);
-
-
-      //ajout du bagde
-      const newBadge = document.createElement('div');
-      const listClass = ['badge-filter', 'px-2',  'd-flex', 'align-items-center', 'mr-1', 'mb-1'];
-      const newBadgeTexte = document.createElement('p');
-      const listClassTexte = ['m-0', 'p-0', 'mr-2'];
-      const newBadgeClose = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      const listClassClose = ['svg-inline--fa', 'fa-times-circle', 'fa-w-16'];
-      const newBadgeClosePath = document.createElementNS('http://www.w3.org/2000/svg','path');
-
-      newBadge.classList.add(...listClass);
-      newBadge.setAttribute('data-value', choiceId );
-      newBadge.addEventListener('click', evt => {
-
-        baliseHasClicked = evt.currentTarget;
-        choiceId = baliseHasClicked.dataset.value;
-        baliseHasClicked.remove();
-        inputWantDesactivate = document.querySelector('#'+ choiceId );
-        inputWantDesactivate.checked = false;
-        typeFilter = inputWantDesactivate.dataset.type
-        removeAndUpdateFilter(choiceId, typeFilter);
-      });
-
-      newBadgeTexte.classList.add(...listClassTexte);
-      newBadgeTexte.innerText = choiceId;
-      newBadge.appendChild(newBadgeTexte);
-
-      newBadgeClose.classList.add(...listClassClose);
-      newBadgeClose.setAttribute('aria-hidden', "true");
-      newBadgeClose.setAttribute('data-prefix', "fas");
-      newBadgeClose.setAttribute('data-icon', "times-circle");
-      newBadgeClose.setAttribute('role', "img");
-      newBadgeClose.setAttribute('viewBox', "0 0 512 512");
-      newBadgeClose.setAttribute('data-fa-i2svg', "");
-      newBadge.appendChild(newBadgeClose);
-
-
-      newBadgeClosePath.setAttribute('fill', "currentColor");
-      newBadgeClosePath.setAttribute('d', "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z");
-      newBadgeClose.appendChild(newBadgeClosePath);
-      zoneBadge.appendChild(newBadge);
-
-    }else{
-
-      removeAndUpdateFilter(choiceId, typeFilter);
-      badge = zoneBadge.querySelector('div[data-value="'+choiceId+'"]');
-      badge.remove();
-    }
+// append a typed 'type' badge (ex: 'philosophy') to parent element 'el'
+const createBadge = (el, type) => {
+    let html =
+        `
+        <div class="badge-filter" data-value="${type}">
+        <p>${type}</p>
+        <i class="far fa-times-circle"></i>
+        </div>
+        `
+    el.innerHTML += html
+    return this
+}
 
 
 
+// watch filters update
+for (let item of checksFilter) {
 
-  });
+    // if user want to add a filter
+    item.addEventListener('change', (evt)=>{
+
+        // keep his choice
+        const elChecked = evt.currentTarget;
+        let choice      = elChecked.getAttribute('id');
+        let filterName  = elChecked.dataset.type;
+
+        if (elChecked.checked) {
+
+            // update filter const and create related badge 
+            filter[filterName].push(choice);
+            createBadge(zoneBadge, choice);
+
+        } else {
+            removeAndUpdateFilter(choice, filterName);
+            badge = zoneBadge.querySelector('div[data-value="'+choice+'"]');
+            badge.remove();
+        }
+    });
 }
 
 
@@ -415,11 +388,8 @@ document.addEventListener('click', evt =>{
 })
 
 function removeAndUpdateFilter(choiceId, typeFilter){
-
-
-  indexInArrayGenre = filter[typeFilter].findIndex( (element)=>  element == choiceId );
-  filter[typeFilter].splice(indexInArrayGenre,1);
-
+  index = filter[typeFilter].findIndex( (element)=>  element == choiceId );
+  filter[typeFilter].splice(index,1);
 }
 
 
