@@ -185,28 +185,74 @@ const createBadge = (el, type) => {
 }
 
 
+// if zoneBage's observer finds new div.badge-filter nodes, make them
+// react if clicked
+if (zoneBadge) {
+    const observer = function(mutationsList, zoneBadgeObs) {
+        for (let mutation of mutationsList) {
+            for (let node of mutation.addedNodes) {
 
-// watch filters update
+                // track only HTMLElements
+                if (!(node instanceof HTMLElement)) {
+                    continue;
+                }
+
+                // if a badge is seen, handle each one and break
+                if (node.matches('div.badge-filter')) {
+                    handleBadgeCLick()
+                }
+            }
+        }
+    };
+
+    // create observer instance for zoneBadge
+    const zoneBadgeObs = new MutationObserver(observer);
+    const zoneBadgeObsConf = {attributes: true, childList: true}
+    zoneBadgeObs.observe(zoneBadge, zoneBadgeObsConf);
+}
+
+
+// remove badge and update filters if clicked
+const handleBadgeCLick = () => {
+    const badges = document.querySelectorAll('.badge-filter')
+
+    for (let badge of badges) {
+        badge.addEventListener('click', () => {
+            // find badge's associated checkbox and uncheck it
+            let filterInput = document.querySelector('.form-check-input[id="'+badge.dataset.value+'"]')
+            filterInput.checked = false
+
+            // and update filter object
+            removeAndUpdateFilter(badge.dataset.value, filterInput.dataset.type)
+            badge.remove()
+        })
+    }
+}
+
+
+// watch filters updates
 for (let item of checksFilter) {
 
     // if user want to add a filter
-    item.addEventListener('change', (evt)=>{
+    item.addEventListener('change', (evt) => {
 
         // keep his choice
         const elChecked = evt.currentTarget;
         let choice      = elChecked.getAttribute('id');
         let filterName  = elChecked.dataset.type;
 
+        // if checked, add filter and it's badge
         if (elChecked.checked) {
-
-            // update filter const and create related badge 
             filter[filterName].push(choice);
             createBadge(zoneBadge, choice);
 
+        // else remove filter and it's badge (if needed)
         } else {
             removeAndUpdateFilter(choice, filterName);
             badge = zoneBadge.querySelector('div[data-value="'+choice+'"]');
-            badge.remove();
+            if (badge !== null) {
+                badge.remove();
+            }
         }
     });
 }
@@ -232,8 +278,6 @@ if( btnApplyFilter !== null ){
     loader.classList.add("loader-on");
     fetchBooks();
     ticking = true;
-
-
   });
 }
 
@@ -244,7 +288,6 @@ if( btnDesactivateFilter !== null ){
 
   });
 }
-
 
 
 btnSearch.addEventListener('click', (evt) =>{
@@ -261,8 +304,6 @@ btnSearch.addEventListener('click', (evt) =>{
   formSearch = document.querySelector('.form-search');
   formSearch.action = `/home/search/bytitle/${searchValue}`;
   formSearch.submit();
-
-
 });
 
 inputSearch.addEventListener('keypress', (evt) => {
@@ -285,10 +326,6 @@ inputSearch.addEventListener('keypress', (evt) => {
 
     return;
   }
-
-
-
-
 
   //On récupère le contenu saisie
   searchValue = element.value;
@@ -325,9 +362,6 @@ inputSearch.addEventListener('keypress', (evt) => {
 
       return;
     }
-
-
-
 
     //on va créer créer la zone autocomplete
     if( document.querySelector('.search-autocomplete') === null ){
@@ -366,14 +400,10 @@ inputSearch.addEventListener('keypress', (evt) => {
       autocomplete.appendChild(newP);
     }
 
-
   })
   .catch(error => {
     console.log(error);
   });
-
-
-
 
 });
 
@@ -433,8 +463,6 @@ function resetFilter(){
   //réinitialisation de la case de formulaire
   inputSearch.value = '';
   inputSearch.classList.remove('is-invalid');
-
-
 
   //on recharge la page
   // if no order specified, keep descYear order
