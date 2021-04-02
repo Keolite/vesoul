@@ -1,7 +1,7 @@
 # Vesoul
 
-Vesoul is a Symfony project built to replace an old e-commerce site owned by a
-French book label called [Vesoul-Edition](https://vesouledition.fr/).
+vesoul is a symfony project built to replace an old e-commerce site owned by a
+french book label called [vesoul-edition](https://vesouledition.fr/).
 
 
 ## Install
@@ -83,27 +83,23 @@ Thanks to this, it will be easier to prepare dev and test environment.
 **prepare dev environment** :
 
 ```bash
-docker-compose exec sh -c "cd vesoul; composer prepare"
+composer prepare"
 ```
 
 
 **prepare test environment** :
 
 ```bash
-docker-compose exec sh -c "cd vesoul; composer prepare-test"
+composer prepare-test"
 ```
 
+**This will recreate the database and fixtures, so stop wasting your time**.
 
-Of course, this can be done directly from inside the www container too.
-You just have to `docker-compose exec www bash` and you're in. `cd vesoul` to be
-into the correct folder and now you can build the environment with just
-`composer prepare` or `composer prepare-test` scripts.
-Now you're inside the www container, if you want to exit you just have `exit`
-or `ctrl+d` and you're back into your preferred OS.
+Note : **Don't forget that you have to configure Symfony environment !**.
 
-**Each command will do everything needed from creating the database to making
-fixtures, so stop wasting your time, now you know what to do**.
-
+You can replace DATABASE_URL and MAILER_URL into .env and .env.test if you want.
+But you can also override it using .env.local and .env.test.local.
+Moreover, these ones are not committed (Symfony add them in .gitignore).
 
 ## Conclusion
 
