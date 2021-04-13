@@ -4,6 +4,21 @@
     top: 2rem;
     right: 2rem;
     min-width: 350px;
+
+    .toast-header,
+    .toast-body {
+        background-color: #EDEDED;
+    }
+
+    .toast-header {
+        border-top-left-radius: calc(0.5rem - 1px);
+        border-top-right-radius: calc(0.5rem - 1px);
+    }
+
+    .toast-body {
+        border-bottom-left-radius: calc(0.5rem - 1px);
+        border-bottom-right-radius: calc(0.5rem - 1px);
+    }
 }
 
 
