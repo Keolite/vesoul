@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
-use Swift_Mailer;
-use Swift_Message;
+use App\Manager\MailManager;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,17 +18,16 @@ use App\Manager\CartManager;
 
 class SecurityController extends AbstractController
 {
-
     private AuthenticationUtils $authenticationUtils;
     private UserPasswordEncoderInterface $encoder;
-    private Swift_Mailer $mailer;
+    private MailManager $mailer;
     private EntityManagerInterface $manager;
     private CartManager $cartManager;
 
     public function __construct(
         AuthenticationUtils $authenticationUtils,
         UserPasswordEncoderInterface $encoder,
-        Swift_Mailer $mailer,
+        MailManager $mailer,
         EntityManagerInterface $manager,
         CartManager $cartManager
     ) {
@@ -44,7 +43,6 @@ class SecurityController extends AbstractController
      */
     public function login(): Response
     {
-
         if ($this->getUser()) {
             return $this->redirectToRoute('dashboard_user_home');
         }
@@ -55,10 +53,11 @@ class SecurityController extends AbstractController
 
 
         return $this->render(
-            'security/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
-            'cart' => $cart
+            'security/login.html.twig',
+            [
+                'last_username' => $lastUsername,
+                'error' => $error,
+                'cart' => $cart
             ]
         );
     }
@@ -79,7 +78,6 @@ class SecurityController extends AbstractController
      */
     public function registration(Request $request)
     {
-
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user)
             ->handleRequest($request);
@@ -87,8 +85,6 @@ class SecurityController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $contact = $form->getData();
 
             // if form is ok : hash user's password and save infos
             $hash = $this->encoder->encodePassword($user, $user->getPassword());
@@ -98,31 +94,23 @@ class SecurityController extends AbstractController
             $this->manager->flush();
 
             // Confirm subscription
-            $this->addFlash('success', "Félicitation ! Un email de confirmation vous a été envoyé");
 
-            // and confirm va email
-            $mail = (new Swift_Message("Bienvenue sur Vesoul Edition !"))
-                ->setFrom('vesouledition@sfr.fr')
-                ->setTo($user->getUsername())
-                ->setBody(
-                    $this->renderView(
-                        'email/confirm.html.twig',
-                        [
-                            'email' => $user->getUsername(),
-                            'contact' => $contact
-                        ]
-                    ), 'text/html'
-                );
+            //send email registration confirmation
+            try {
+                $this->mailer->sendRegistrationMail($user);
+                $this->addFlash('success', "Félicitation ! Un email de confirmation vous a été envoyé");
+            } catch (TransportExceptionInterface $e) {
+                $this->addFlash('danger', "Un problème est survenu lors de l'envoi de votre email de confirmation");
+            }
 
-            // send email, then redirect
-            $this->mailer->send($mail);
             return $this->redirectToRoute('login');
         }
 
         return $this->render(
-            'security/inscription.html.twig', [
-            'form' => $form->createView(),
-            'cart' => $cart
+            'security/inscription.html.twig',
+            [
+                'form' => $form->createView(),
+                'cart' => $cart
             ]
         );
     }

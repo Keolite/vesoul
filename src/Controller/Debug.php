@@ -4,12 +4,13 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use \Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * Class Debug
@@ -20,10 +21,10 @@ use Symfony\Component\HttpFoundation\Response;
 class Debug extends AbstractController
 {
 
-    private Swift_Mailer $mailer;
+    private MailerInterface $mailer;
 
     public function __construct(
-        Swift_Mailer $mailer
+        MailerInterface $mailer
     ) {
         $this->mailer = $mailer;
     }
@@ -38,24 +39,23 @@ class Debug extends AbstractController
 
         $emailAddress = $this->getUser()->getUsername();
 
-        // TODO: changer setTO et setFrom
-        $message = (new Swift_Message("Bienvenue"))
-            ->setFrom('testmail@exemple.com')
-            ->setTo($emailAddress)
-            ->setBody(
-                $this->renderView(
-                    'email/confirm.html.twig',
-                    [
-                        // TODO: send first and lastname
-                    ]
-                ), 'text/html'
-            );
+        $mail = (new TemplatedEmail())
+            ->from('admin')
+            ->to($emailAddress)
+            ->subject('Test Mailer')
+            ->context([
+                'firstname' =>  $this->getUser()->getFirstname()
+            ])
+            ->htmlTemplate('email/confirm.html.twig');
 
-        $this->mailer->send($message);
+        try {
+            $this->mailer->send($mail);
+        } catch (TransportExceptionInterface $e) {
+            dd($e);
+        }
 
         return $this->redirectToRoute('dashboard_user_informations');
     }
-
 
     /**
      * @Route("/bill", name="test_bill")
@@ -70,8 +70,9 @@ class Debug extends AbstractController
         dd($order);
 
         return $this->render(
-            'bill/bill.html.twig', [
-            'order' => $order,
+            'bill/bill.html.twig',
+            [
+                'order' => $order,
             ]
         );
     }
