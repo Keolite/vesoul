@@ -7,7 +7,6 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use Faker\Generator;
 use App\Entity\User;
-use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -61,7 +60,7 @@ class UserFixtures extends Fixture
             ->setTel($this->faker->phoneNumber)
             ->setRoles(['ROLE_USER'])
             ->setGender(0)
-            ->setBirth(new DateTime());
+            ->setBirth($this->faker->dateTimeBetween('-40 years', '-18 years'));
 
         $newuser->setPassword(
             $this->passwordEncoder
@@ -87,7 +86,7 @@ class UserFixtures extends Fixture
             ->setTel($this->faker->phoneNumber)
             ->setRoles(['ROLE_ADMIN'])
             ->setGender(0)
-            ->setBirth(new DateTime());
+            ->setBirth($this->faker->dateTimeBetween('-40 years', '-18 years'));
 
         $admin->setPassword(
             $this->passwordEncoder
