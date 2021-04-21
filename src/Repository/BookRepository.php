@@ -37,12 +37,27 @@ class BookRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function maxAndMinYear()
+    /**
+     * Returns an associative array with oldest/youngest book date
+     *
+     * NOTE: I wanted to use createQueryBuilder but EXTRACT seemed unavailable.
+     * It could be used thanks to doctrineextension but I didn't want to add
+     * an dependencdy only for this.
+     *
+     * TODO: cache results if not already cached
+     *
+     * @return array
+     */
+    public function maxAndMinDate(): array
     {
-        return $this->createQueryBuilder('b')
-            ->select('max(b.year) as maxyear, min(b.year) as minyear')
-            ->getQuery()
-            ->getScalarResult();
+        $conn = $this->getEntityManager()->getConnection();
+        $sql  = 'SELECT EXTRACT(YEAR FROM MAX(date)) AS maxyear, ';
+        $sql .= 'EXTRACT(YEAR FROM MIN(date)) AS minyear FROM book';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        return ($stmt->fetchAssociative());
     }
 
     public function countBooks($new, $genre, $author, $yearmin, $yearmax, $title)

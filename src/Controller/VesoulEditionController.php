@@ -56,9 +56,9 @@ class VesoulEditionController extends AbstractController
         $cart = $this->cartManager->getCurrentCart();
         $genres = $this->genreRepo->findAll();
         $authors = $this->authorRepo->findAll();
-        $maxAndMinYear = $this->bookRepo->maxAndMinYear();
-        $minYear = $maxAndMinYear[0]['minyear'];
-        $maxYear = $maxAndMinYear[0]['maxyear'];
+        $maxAndMinDate = $this->bookRepo->maxAndMinDate();
+        $minYear = $maxAndMinDate['minyear'];
+        $maxYear = $maxAndMinDate['maxyear'];
 
         return $this->render(
             'vesoul-edition/home.html.twig', [
@@ -82,24 +82,25 @@ class VesoulEditionController extends AbstractController
 
         $books = [];
 
-        if (strlen($searchValue) > 0 ) {
+        if (strlen($searchValue) > 0) {
             $books = $this->bookRepo->searchByTitle($searchValue);
         }
 
         $genres = $this->genreRepo->findAll();
         $authors = $this->authorRepo->findAll();
-        $maxAndMinYear = $this->bookRepo->maxAndMinYear();
-        $minYear = $maxAndMinYear[0]['minyear'];
-        $maxYear = $maxAndMinYear[0]['maxyear'];
+        $maxAndMinDate = $this->bookRepo->maxAndMinDate();
+        $minYear = $maxAndMinDate['minyear'];
+        $maxYear = $maxAndMinDate['maxyear'];
 
         return $this->render(
-            'vesoul-edition/home.html.twig', [
-            'genres' => $genres,
-            'authors' => $authors,
-            'minyear' => $minYear,
-            'maxyear' => $maxYear,
-            'books'   => $books,
-            'searchValue' => $searchValue
+            'vesoul-edition/home.html.twig',
+            [
+                'genres' => $genres,
+                'authors' => $authors,
+                'minyear' => $minYear,
+                'maxyear' => $maxYear,
+                'books'   => $books,
+                'searchValue' => $searchValue
             ]
         );
     }
