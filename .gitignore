@@ -28,3 +28,6 @@ public/static/book/uploads
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 .php_cs.cache
+
+# coverage files
+build
