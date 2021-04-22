@@ -113,33 +113,17 @@ class VesoulEditionController extends AbstractController
      */
     public function autocomplete(string $searchValue): Response
     {
+        /** Only return search resuts if conditions are OK */
+        if (strlen($searchValue) >= 3) {
 
-        $books = [];
-
-        if(strlen($searchValue) >= 3 ) {
             $books = $this->bookRepo->findTitle($searchValue);
+
+            if (count($books) > 0) {
+                return new JsonResponse(['books' => $books]);
+            }
         }
 
-        $response = new Response();
-        if(count($books) > 0 ) {
-
-            $response->setContent(
-                json_encode(
-                    [
-                    'books' => $books,
-                    ]
-                )
-            );
-            $response->setStatusCode(Response::HTTP_OK);
-            $response->headers->set('Content-Type', 'application/json');
-
-        }else{
-
-            $response->headers->set('Content-Type', 'text/plain');
-            $response->setStatusCode(Response::HTTP_NO_CONTENT);
-        }
-
-        return $response;
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
 
