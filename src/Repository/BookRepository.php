@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Book;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -57,7 +58,7 @@ class BookRepository extends ServiceEntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
-        return ($stmt->fetchAssociative());
+        return $stmt->fetchAssociative();
     }
 
     public function countBooks($new, $genre, $author, $yearmin, $yearmax, $title)
@@ -130,7 +131,7 @@ class BookRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT book.id, book.price, book.title, book.stock, book.year, author.id, author.firstname, author.lastname, image.name, genre.name AS genre
+            SELECT book.id, book.price, book.title, book.stock, book.date, author.id, author.firstname, author.lastname, image.name, genre.name AS genre
             FROM book
             INNER JOIN  author ON book.author_id = author.id
             INNER JOIN image ON book.id = image.book_id
@@ -150,7 +151,7 @@ class BookRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT book.id, book.price, book.title, book.stock, book.year, author.firstname, author.lastname, image.name, genre.name AS genre
+            SELECT book.id, book.price, book.title, book.stock, book.date, author.firstname, author.lastname, image.name, genre.name AS genre
             FROM book
             INNER JOIN  author ON book.author_id = author.id
             INNER JOIN image ON book.id = image.book_id
@@ -170,13 +171,13 @@ class BookRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT book.id, book.price, book.title, book.stock, book.year, author.firstname, author.lastname, image.name, genre.name AS genre
+            SELECT book.id, book.price, book.title, book.stock, book.date, author.firstname, author.lastname, image.name, genre.name AS genre
             FROM book
             INNER JOIN  author ON book.author_id = author.id
             INNER JOIN image ON book.id = image.book_id
             INNER jOIN book_genre ON book.id = book_genre.book_id
             INNER JOIN genre ON book_genre.genre_id = genre.id
-            ORDER BY book.year
+            ORDER BY book.date
         ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -190,13 +191,13 @@ class BookRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT book.id, book.price, book.title, book.stock, book.year, author.firstname, author.lastname, image.name, genre.name AS genre
+            SELECT book.id, book.price, book.title, book.stock, book.date, author.firstname, author.lastname, image.name, genre.name AS genre
             FROM book
             INNER JOIN  author ON book.author_id = author.id
             INNER JOIN image ON book.id = image.book_id
             INNER jOIN book_genre ON book.id = book_genre.book_id
             INNER JOIN genre ON book_genre.genre_id = genre.id
-            ORDER BY book.year DESC
+            ORDER BY book.date DESC
         ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -210,7 +211,7 @@ class BookRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT book.description, book.price, book.isbn, book.title, book.stock, book.year, book.length, book.width, author.id, author.firstname, author.lastname, genre.name AS genre, image.name
+            SELECT book.description, book.price, book.isbn, book.title, book.stock, book.date, book.length, book.width, author.id, author.firstname, author.lastname, genre.name AS genre, image.name
             FROM book
             INNER JOIN  author ON book.author_id = author.id
             INNER jOIN book_genre ON book.id = book_genre.book_id
