@@ -15,9 +15,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class BookRepository extends ServiceEntityRepository
 {
-
     public const LIMIT = 9;
-
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -27,11 +25,10 @@ class BookRepository extends ServiceEntityRepository
 
     public function findTitle($title)
     {
-
         return $this->createQueryBuilder('b')
             ->select('b.id, b.title')
             ->andWhere('b.title like :title')
-            ->setParameter(':title', '%'.$title.'%')
+            ->setParameter(':title', '%' . $title . '%')
             ->orderBy('b.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
@@ -63,7 +60,6 @@ class BookRepository extends ServiceEntityRepository
 
     public function countBooks($new, $genre, $author, $yearmin, $yearmax, $title)
     {
-
         $queryParameters = [];
 
         $query =  $this->createQueryBuilder('b')
@@ -71,44 +67,41 @@ class BookRepository extends ServiceEntityRepository
             ->join('b.genres', 'g')
             ->join('b.author', 'a');
 
-        if($new === "true" ) {
+        if ($new === "true") {
             $query = $query->andWhere('b.new = :new');
             $queryParameters[':new'] = $new;
         }
 
-        if(count($genre) > 0 ) {
-
+        if (count($genre) > 0) {
             $queryGenre = "";
 
-            for( $i = 0; $i < count($genre); $i++){
-                $queryGenre .= ($i === 0 ) ? 'g.name = :genre'.$i : ' OR g.name = :genre'.$i ;
-                $queryParameters['genre'.$i] = $genre[$i];
+            for ($i = 0; $i < count($genre); $i++) {
+                $queryGenre .= ($i === 0) ? 'g.name = :genre' . $i : ' OR g.name = :genre' . $i;
+                $queryParameters['genre' . $i] = $genre[$i];
             }
 
             $query = $query->andWhere($queryGenre);
         }
 
-        if(count($author) > 0 ) {
-
+        if (count($author) > 0) {
             $queryAuthor = "";
 
-            for( $i = 0; $i < count($author); $i++){
+            for ($i = 0; $i < count($author); $i++) {
                 $authorFirstAndLastName = explode('-', $author[$i]);
-                if(count($authorFirstAndLastName) === 2 ) {
-                    $queryAuthor .= ($i === 0 ) ? ' ( a.firstname = :authorfirstname'.$i.' and a.lastname = :authorlastname'.$i.' ) ' : ' OR ( a.firstname = :authorfirstname'.$i.' and a.lastname = :authorlastname'.$i.' ) ' ;
-                    $queryParameters[':authorfirstname'.$i] = $authorFirstAndLastName[0];
-                    $queryParameters[':authorlastname'.$i] = $authorFirstAndLastName[1];
+                if (count($authorFirstAndLastName) === 2) {
+                    $queryAuthor .= ($i === 0) ? ' ( a.firstname = :authorfirstname' . $i . ' and a.lastname = :authorlastname' . $i . ' ) ' : ' OR ( a.firstname = :authorfirstname' . $i . ' and a.lastname = :authorlastname' . $i . ' ) ';
+                    $queryParameters[':authorfirstname' . $i] = $authorFirstAndLastName[0];
+                    $queryParameters[':authorlastname' . $i] = $authorFirstAndLastName[1];
                 }
             }
 
             $query = $query->andWhere($queryAuthor);
-
         }
 
 
-        if(strlen($title) > 0 ) {
+        if (strlen($title) > 0) {
             $query = $query->andWhere('b.title like :title');
-            $queryParameters[':title'] = '%'.$title.'%';
+            $queryParameters[':title'] = '%' . $title . '%';
         }
 
         /**
@@ -129,7 +122,6 @@ class BookRepository extends ServiceEntityRepository
         }
 
         return $query->getQuery()->getSingleScalarResult();
-
     }
 
 
@@ -264,7 +256,6 @@ class BookRepository extends ServiceEntityRepository
 
     public function findPageOfListBook($offset, $orderBy, $new, $genre, $author, $yearmin, $yearmax, $title)
     {
-
         $fieldOrderBy = 'title';
         $howOrderBy = 'ASC';
         $queryParameters = [];
@@ -295,46 +286,42 @@ class BookRepository extends ServiceEntityRepository
             ->join('b.images', 'i')
             ->join('b.genres', 'g');
 
-        if($new === "true" ) {
+        if ($new === "true") {
             $query = $query->andWhere('b.new = :new');
             $queryParameters[':new'] = $new;
         }
 
-        if(count($genre) > 0 ) {
-
+        if (count($genre) > 0) {
             $queryGenre = "";
 
-            for( $i = 0; $i < count($genre); $i++){
-                $queryGenre .= ($i === 0 ) ? 'g.name = :genre'.$i : ' OR g.name = :genre'.$i ;
-                $queryParameters[':genre'.$i] = $genre[$i];
+            for ($i = 0; $i < count($genre); $i++) {
+                $queryGenre .= ($i === 0) ? 'g.name = :genre' . $i : ' OR g.name = :genre' . $i;
+                $queryParameters[':genre' . $i] = $genre[$i];
             }
 
             $query = $query->andWhere($queryGenre);
-
         }
 
-        if(count($author) > 0 ) {
-
+        if (count($author) > 0) {
             $queryAuthor = "";
 
 
-            for( $i = 0; $i < count($author); $i++){
+            for ($i = 0; $i < count($author); $i++) {
                 $authorFirstAndLastName = explode('-', $author[$i]);
-                if(count($authorFirstAndLastName) === 2 ) {
-                    $queryAuthor .= ($i === 0 ) ? ' ( a.firstname = :authorfirstname'.$i.' and a.lastname = :authorlastname'.$i.' ) ' : ' OR ( a.firstname = :authorfirstname'.$i.' and a.lastname = :authorlastname'.$i.' ) ' ;
-                    $queryParameters[':authorfirstname'.$i] = $authorFirstAndLastName[0];
-                    $queryParameters[':authorlastname'.$i] = $authorFirstAndLastName[1];
+                if (count($authorFirstAndLastName) === 2) {
+                    $queryAuthor .= ($i === 0) ? ' ( a.firstname = :authorfirstname' . $i . ' and a.lastname = :authorlastname' . $i . ' ) ' : ' OR ( a.firstname = :authorfirstname' . $i . ' and a.lastname = :authorlastname' . $i . ' ) ';
+                    $queryParameters[':authorfirstname' . $i] = $authorFirstAndLastName[0];
+                    $queryParameters[':authorlastname' . $i] = $authorFirstAndLastName[1];
                 }
             }
 
             $query = $query->andWhere($queryAuthor);
-
         }
 
 
         if (strlen($title) > 0) {
             $query = $query->andWhere('b.title like :title');
-            $queryParameters[':title'] = '%'.$title.'%';
+            $queryParameters[':title'] = '%' . $title . '%';
         }
 
 
@@ -357,7 +344,7 @@ class BookRepository extends ServiceEntityRepository
             $query = $query->setParameters($queryParameters);
         }
 
-        return $query->orderBy('b.'.$fieldOrderBy, $howOrderBy)
+        return $query->orderBy('b.' . $fieldOrderBy, $howOrderBy)
             ->setFirstResult($offset)
             ->setMaxResults(self::LIMIT)
             ->getQuery()
@@ -366,14 +353,13 @@ class BookRepository extends ServiceEntityRepository
 
     public function searchByTitle($title)
     {
-
         $fieldOrderBy = 'title';
         $howOrderBy = 'ASC';
 
         return $this->createQueryBuilder('b')
             ->Where('b.title like :title ')
-            ->setParameter(':title', '%'.$title.'%')
-            ->orderBy('b.'.$fieldOrderBy, $howOrderBy)
+            ->setParameter(':title', '%' . $title . '%')
+            ->orderBy('b.' . $fieldOrderBy, $howOrderBy)
             ->getQuery()
             ->getResult();
     }
