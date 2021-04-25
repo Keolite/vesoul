@@ -148,12 +148,16 @@ class VesoulEditionController extends AbstractController
         $offset = ($page - 1) * $max_per_page;
         $books = $this->bookRepo->findPageOfListBook($offset, $orderBy, $new, $genre, $author, $yearmin, $yearmax, $title);
 
-        $response = new Response();
-        $response->setCharset('utf-8');
-        $response->headers->set('Content-Type', 'text/html');
-        $response->headers->set('X-TotalBooks', $total_books);
-        $response->headers->set('X-TotalPage', $pages);
-        $response->setStatusCode(Response::HTTP_OK);
+        $response = new Response(
+            '',
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'text/html',
+                'X-TotalBooks', $total_books,
+                'X-TotalPage', $pages
+            ]
+        );
+
         $response->send();
 
         return $this->render(
