@@ -23,7 +23,7 @@
             <h3 class="m-0">{{book.title}}</h3>
             <div class="d-flex justify-content-between w-100">
                 <p class="m-0">{{book.author.firstname}} {{book.author.lastname}}</p>
-                <p class="m-0">{{book.year}}</p>
+                <p class="m-0">{{book.date|date("Y")}}</p>
             </div>
             <div class="row">
                 <div class="col-4 d-flex align-items-center">

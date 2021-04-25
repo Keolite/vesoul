@@ -56,17 +56,18 @@ class VesoulEditionController extends AbstractController
         $cart = $this->cartManager->getCurrentCart();
         $genres = $this->genreRepo->findAll();
         $authors = $this->authorRepo->findAll();
-        $maxAndMinYear = $this->bookRepo->maxAndMinYear();
-        $minYear = $maxAndMinYear[0]['minyear'];
-        $maxYear = $maxAndMinYear[0]['maxyear'];
+        $maxAndMinDate = $this->bookRepo->maxAndMinDate();
+        $minYear = $maxAndMinDate['minyear'];
+        $maxYear = $maxAndMinDate['maxyear'];
 
         return $this->render(
-            'vesoul-edition/home.html.twig', [
-            'genres' => $genres,
-            'authors' => $authors,
-            'minyear' => $minYear,
-            'maxyear' => $maxYear,
-            'cart' => $cart
+            'vesoul-edition/home.html.twig',
+            [
+                'genres' => $genres,
+                'authors' => $authors,
+                'minyear' => $minYear,
+                'maxyear' => $maxYear,
+                'cart' => $cart
             ]
         );
     }
@@ -79,27 +80,27 @@ class VesoulEditionController extends AbstractController
      */
     public function searchByTitle(string $searchValue): Response
     {
-
         $books = [];
 
-        if (strlen($searchValue) > 0 ) {
+        if (strlen($searchValue) > 0) {
             $books = $this->bookRepo->searchByTitle($searchValue);
         }
 
         $genres = $this->genreRepo->findAll();
         $authors = $this->authorRepo->findAll();
-        $maxAndMinYear = $this->bookRepo->maxAndMinYear();
-        $minYear = $maxAndMinYear[0]['minyear'];
-        $maxYear = $maxAndMinYear[0]['maxyear'];
+        $maxAndMinDate = $this->bookRepo->maxAndMinDate();
+        $minYear = $maxAndMinDate['minyear'];
+        $maxYear = $maxAndMinDate['maxyear'];
 
         return $this->render(
-            'vesoul-edition/home.html.twig', [
-            'genres' => $genres,
-            'authors' => $authors,
-            'minyear' => $minYear,
-            'maxyear' => $maxYear,
-            'books'   => $books,
-            'searchValue' => $searchValue
+            'vesoul-edition/home.html.twig',
+            [
+                'genres' => $genres,
+                'authors' => $authors,
+                'minyear' => $minYear,
+                'maxyear' => $maxYear,
+                'books'   => $books,
+                'searchValue' => $searchValue
             ]
         );
     }
@@ -112,33 +113,16 @@ class VesoulEditionController extends AbstractController
      */
     public function autocomplete(string $searchValue): Response
     {
-
-        $books = [];
-
-        if(strlen($searchValue) >= 3 ) {
+        /** Only return search resuts if conditions are OK */
+        if (strlen($searchValue) >= 3) {
             $books = $this->bookRepo->findTitle($searchValue);
+
+            if (count($books) > 0) {
+                return new JsonResponse(['books' => $books]);
+            }
         }
 
-        $response = new Response();
-        if(count($books) > 0 ) {
-
-            $response->setContent(
-                json_encode(
-                    [
-                    'books' => $books,
-                    ]
-                )
-            );
-            $response->setStatusCode(Response::HTTP_OK);
-            $response->headers->set('Content-Type', 'application/json');
-
-        }else{
-
-            $response->headers->set('Content-Type', 'text/plain');
-            $response->setStatusCode(Response::HTTP_NO_CONTENT);
-        }
-
-        return $response;
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
 
@@ -149,7 +133,6 @@ class VesoulEditionController extends AbstractController
      */
     public function homeload(Request $request): Response
     {
-
         $page = $request->get('page');
         $orderBy = $request->get('orderBy');
         $new = $request->get('new');
@@ -165,13 +148,18 @@ class VesoulEditionController extends AbstractController
         $offset = ($page - 1) * $max_per_page;
         $books = $this->bookRepo->findPageOfListBook($offset, $orderBy, $new, $genre, $author, $yearmin, $yearmax, $title);
 
-        $response = new Response();
-        $response->setCharset('utf-8');
-        $response->headers->set('Content-Type', 'text/html');
-        $response->headers->set('X-TotalBooks', $total_books);
-        $response->headers->set('X-TotalPage', $pages);
-        $response->setStatusCode(Response::HTTP_OK);
+        $response = new Response(
+            '',
+            Response::HTTP_OK,
+            [
+                'Content-Type' => 'text/html',
+                'X-TotalBooks', $total_books,
+                'X-TotalPage', $pages
+            ]
+        );
+
         $response->send();
+
         return $this->render(
             'ajax/page-book.html.twig',
             [
@@ -184,14 +172,14 @@ class VesoulEditionController extends AbstractController
     /**
      * @Route("/ascName", name="sortByAscName")
      */
-    public function sortByAscName() : JsonResponse
+    public function sortByAscName(): JsonResponse
     {
         $books = $this->bookRepo->findAllBooksByAscName();
         $arrayBooks = [];
         $data = [];
         $i = 0;
 
-        foreach($books as $key => $book){
+        foreach ($books as $key => $book) {
             $i++;
             $arrayBooks[$key + 1] = $this->render('ajax/book.html.twig', ['book' => $book]);
             $data[] = $arrayBooks[$i]->getContent();
@@ -204,14 +192,14 @@ class VesoulEditionController extends AbstractController
     /**
      * @Route("/descName", name="sortByDescName")
      */
-    public function sortByDescName() : JsonResponse
+    public function sortByDescName(): JsonResponse
     {
         $books = $this->bookRepo->findAllBooksByDescName();
         $arrayBooks = [];
         $data = [];
         $i = 0;
 
-        foreach($books as $key => $book){
+        foreach ($books as $key => $book) {
             $i++;
             $arrayBooks[$key + 1] = $this->render('ajax/book.html.twig', ['book' => $book]);
             $data[] = $arrayBooks[$i]->getContent();
@@ -224,14 +212,14 @@ class VesoulEditionController extends AbstractController
     /**
      * @Route("/ascYear", name="sortByAscYear")
      */
-    public function sortByAscYear() : JsonResponse
+    public function sortByAscYear(): JsonResponse
     {
         $books = $this->bookRepo->findAllBooksByAscYear();
         $arrayBooks = [];
         $data = [];
         $i = 0;
 
-        foreach($books as $key => $book){
+        foreach ($books as $key => $book) {
             $i++;
             $arrayBooks[$key + 1] = $this->render('ajax/book.html.twig', ['book' => $book]);
             $data[] = $arrayBooks[$i]->getContent();
@@ -246,14 +234,14 @@ class VesoulEditionController extends AbstractController
      * @param              BookRepository $bookRepo
      * @return             JsonResponse
      */
-    public function sortByDescYear(BookRepository $bookRepo) : JsonResponse
+    public function sortByDescYear(BookRepository $bookRepo): JsonResponse
     {
         $books = $bookRepo->findAllBooksByDescYear();
         $arrayBooks = [];
         $data = [];
         $i = 0;
 
-        foreach($books as $key => $book){
+        foreach ($books as $key => $book) {
             $i++;
             $arrayBooks[$key + 1] = $this->render('ajax/book.html.twig', ['book' => $book]);
             $data[] = $arrayBooks[$i]->getContent();
@@ -321,7 +309,6 @@ class VesoulEditionController extends AbstractController
 
         // remove item if already in cart
         foreach ($items as $cartItem) {
-
             if ($cartItem->getBook() === $book && $cartItem->getQuantity() > 1) {
                 $cart->reduceItem($cartItem);
                 $this->cartManager->save($cart);
@@ -348,7 +335,6 @@ class VesoulEditionController extends AbstractController
 
         // remove item if already in cart
         foreach ($items as $cartItem) {
-
             if ($cartItem->getBook() === $book && $cartItem->getQuantity() > 1) {
                 $cart->reduceItem($cartItem);
                 $this->cartManager->save($cart);
@@ -376,7 +362,6 @@ class VesoulEditionController extends AbstractController
         // remove item if already in cart
         foreach ($items as $item) {
             if ($item->getBook() === $book) {
-
                 $cart->removeItem($item);
                 $this->cartManager->save($cart);
 
@@ -403,7 +388,6 @@ class VesoulEditionController extends AbstractController
         // remove item if already in cart
         foreach ($items as $item) {
             if ($item->getBook() === $book) {
-
                 $cart->removeItem($item);
                 $this->cartManager->save($cart);
 
@@ -426,10 +410,11 @@ class VesoulEditionController extends AbstractController
         $cart = $this->cartManager->getCurrentCart();
 
         return $this->render(
-            'vesoul-edition/product.html.twig', [
-            'images' => $book->getImages(),
-            'book' => $book,
-            'cart' => $cart
+            'vesoul-edition/product.html.twig',
+            [
+                'images' => $book->getImages(),
+                'book' => $book,
+                'cart' => $cart
             ]
         );
     }
@@ -453,8 +438,9 @@ class VesoulEditionController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse(
                 [
-                'status' => 'OK',
-                ], 200
+                    'status' => 'OK',
+                ],
+                200
             );
         }
 
@@ -473,8 +459,9 @@ class VesoulEditionController extends AbstractController
 
         // render cart infos
         return $this->render(
-            'vesoul-edition/cart.html.twig', [
-            'cart' => $cart,
+            'vesoul-edition/cart.html.twig',
+            [
+                'cart' => $cart,
             ]
         );
     }
@@ -529,8 +516,8 @@ class VesoulEditionController extends AbstractController
 
             // fetch order infos
             $order = $this->getDoctrine()
-                          ->getRepository(Order::class)
-                          ->findUserLastOrder($user);
+                ->getRepository(Order::class)
+                ->findUserLastOrder($user);
 
             // send user/admin order infos
             $this->mailManager->sendNewOrderMail($order);
@@ -541,7 +528,8 @@ class VesoulEditionController extends AbstractController
 
         // render
         return $this->render(
-            'vesoul-edition/order/order.html.twig', [
+            'vesoul-edition/order/order.html.twig',
+            [
                 'user'      => $user,
                 'addresses' => $addresses,
                 'cart'      => $cart,
@@ -564,13 +552,14 @@ class VesoulEditionController extends AbstractController
 
         // get last user's order
         $order = $this->getDoctrine()
-                      ->getRepository(Order::class)
-                      ->findUserLastOrder($user);
+            ->getRepository(Order::class)
+            ->findUserLastOrder($user);
 
         // render last order infos/confirmation
         return $this->render(
-            'vesoul-edition/confirmation.html.twig', [
-            'order' => $order
+            'vesoul-edition/confirmation.html.twig',
+            [
+                'order' => $order
             ]
         );
     }

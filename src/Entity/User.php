@@ -196,7 +196,6 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
-
     }
 
     public function getBirth(): ?DateTime

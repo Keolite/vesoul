@@ -197,7 +197,7 @@
 
                                 <div class="d-flex justify-content-between w-100">
                                     <p class="m-0">{{ book.author.firstname }} {{ book.author.lastname }}</p>
-                                    <p class="m-0">{{ book.year }}</p>
+                                    <p class="m-0">{{ book.date|date("Y") }}</p>
                                 </div>
 
                                 <div class="row">

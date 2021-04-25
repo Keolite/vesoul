@@ -31,12 +31,12 @@ class BookFixtures extends Fixture
     {
 
         // create Genres references
-        for ($i=0; $i < count(self::GENRES); $i++) {
+        for ($i = 0; $i < count(self::GENRES); $i++) {
             $genre = new Genre();
             $genre->setName(self::GENRES[$i]);
             $manager->persist($genre);
 
-            $this->addReference("genreReference_".$i, $genre);
+            $this->addReference("genreReference_" . $i, $genre);
         }
 
 
@@ -62,13 +62,13 @@ class BookFixtures extends Fixture
                 ->setIsbn(strval($faker->isbn10))
                 ->setStock($faker->numberBetween(1, 30))
                 ->setTitle($faker->sentence(3, true))
-                ->setYear($faker->numberBetween(1940, 2020))
+                ->setDate($faker->dateTimeBetween('-20 years', 'now'))
                 ->setLength($faker->numberBetween(10, 400))
                 ->setWidth($faker->numberBetween(10, 50))
                 ->setHeight($faker->numberBetween(10, 50))
                 ->setNew($faker->numberBetween(0, 1))
                 ->addImage($image)
-                ->addGenre($this->getReference("genreReference_".random_int(0, count(self::GENRES) - 1)));
+                ->addGenre($this->getReference("genreReference_" . random_int(0, count(self::GENRES) - 1)));
 
             // save it
             $manager->persist($book);

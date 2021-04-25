@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -59,9 +60,9 @@ class Book
     private $images;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="date")
      */
-    private $year;
+    private DateTime $date;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -224,14 +225,14 @@ class Book
         return $this;
     }
 
-    public function getYear(): ?int
+    public function getDate(): DateTime
     {
-        return $this->year;
+        return $this->date;
     }
 
-    public function setYear(int $year): self
+    public function setDate(DateTime $date): self
     {
-        $this->year = $year;
+        $this->date = $date;
 
         return $this;
     }
