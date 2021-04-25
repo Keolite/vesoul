@@ -111,13 +111,20 @@ class BookRepository extends ServiceEntityRepository
             $queryParameters[':title'] = '%'.$title.'%';
         }
 
+        /**
+         * TODO: Dev horror show left as is temporary as the whole function
+         * should be rewritten completely
+         */
 
+        $dateMin = new DateTime($yearmin . '-01-01');
+        $dateMax = new DateTime($yearmax . '-12-31');
 
-        $query = $query->andWhere('b.year >= :yearmin and b.year <= :yearmax');
-        $queryParameters[':yearmin'] = $yearmin;
-        $queryParameters[':yearmax'] = $yearmax;
+        $query = $query->andWhere('b.date >= :dateMin and b.date <= :dateMax');
 
-        if(count($queryParameters) > 0 ) {
+        $queryParameters[':dateMin'] = $dateMin;
+        $queryParameters[':dateMax'] = $dateMax;
+
+        if (count($queryParameters) > 0) {
             $query = $query->setParameters($queryParameters);
         }
 
@@ -262,24 +269,24 @@ class BookRepository extends ServiceEntityRepository
         $howOrderBy = 'ASC';
         $queryParameters = [];
 
-        switch($orderBy){
+        switch ($orderBy) {
 
-        case 'ascName' :
-            $fieldOrderBy = 'title';
-            $howOrderBy = 'ASC';
-            break;
-        case 'descName' :
-            $fieldOrderBy = 'title';
-            $howOrderBy = 'DESC';
-            break;
-        case 'ascYear' :
-            $fieldOrderBy = 'year';
-            $howOrderBy = 'ASC';
-            break;
-        case 'descYear' :
-            $fieldOrderBy = 'year';
-            $howOrderBy = 'DESC';
-            break;
+            case 'ascName':
+                $fieldOrderBy = 'title';
+                $howOrderBy = 'ASC';
+                break;
+            case 'descName':
+                $fieldOrderBy = 'title';
+                $howOrderBy = 'DESC';
+                break;
+            case 'ascYear':
+                $fieldOrderBy = 'date';
+                $howOrderBy = 'ASC';
+                break;
+            case 'descYear':
+                $fieldOrderBy = 'date';
+                $howOrderBy = 'DESC';
+                break;
         }
 
         $query =  $this->createQueryBuilder('b')
@@ -330,12 +337,23 @@ class BookRepository extends ServiceEntityRepository
             $queryParameters[':title'] = '%'.$title.'%';
         }
 
-        $query = $query->andWhere('b.year >= :yearmin and b.year <= :yearmax');
-        $queryParameters[':yearmin'] = $yearmin;
-        $queryParameters[':yearmax'] = $yearmax;
+
+        /**
+         * TODO: Dev horror show left as is temporary as the whole function
+         * should be rewritten completely
+         */
 
 
-        if (count($queryParameters) > 0 ) {
+        $query = $query->andWhere('b.date >= :dateMin and b.date <= :dateMax');
+
+        $dateMin = new DateTime($yearmin . '-01-01');
+        $dateMax = new DateTime($yearmax . '-12-31');
+
+        $queryParameters[':dateMin'] = $dateMin;
+        $queryParameters[':dateMax'] = $dateMax;
+
+
+        if (count($queryParameters) > 0) {
             $query = $query->setParameters($queryParameters);
         }
 
