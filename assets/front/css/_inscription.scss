@@ -7,25 +7,25 @@
     div {
 
         width: 90%;
-        
+
         .inscription-part-left {
 
             background-color: $color-main;
-        
+
             h1 {
                 color: $color-text-light;
                 font-family: $font-main;
                 font-weight: bolder;
             }
-        
+
             p {
                 color: $color-text-light;
                 font-family: $font-main;
             }
 
-            
+
         }
-        
+
         .inscription-part-right {
 
             background-color: white;
@@ -35,10 +35,11 @@
                 font-family: $font-secondary;
                 font-weight: bold;
             }
-            
+
             form {
-                
+
                 input {
+                    margin-bottom: 1rem;
                     border-radius: 0px;
                     border: solid lightgrey 2px;
                 }
@@ -46,14 +47,22 @@
                 input::placeholder {
                     color: lightgrey;
                 }
-                
-                .register-gender { // Wrapper Homme/Femme
+
+                .register-gender {
                     display: flex;
                     justify-content: flex-start;
                     align-items: center;
 
-                    .required { // Label Homme/Femme
-                        padding: 10px;     
+                    input {
+                        margin: 0;
+                    }
+
+                    label {
+                       padding: 0 0.5rem !important;
+                    }
+
+                    .required {
+                        padding: 10px;
                         margin: 0;
                     }
                 }
@@ -63,19 +72,19 @@
                 }
 
                 .btn-inscription {
+                    margin: 0.5rem;
                     border-radius: 2px;
                     background-color: $color-main;
                     color: white;
                     font-family: $font-main;
-                    font-size: 15px;
+                    font-size: 1.1rem;
                 }
-            }
 
-            
+            }
 
         }
 
     }
-       
+
 }
 
