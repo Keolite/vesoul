@@ -153,8 +153,8 @@ class VesoulEditionController extends AbstractController
             Response::HTTP_OK,
             [
                 'Content-Type' => 'text/html',
-                'X-TotalBooks', $total_books,
-                'X-TotalPage', $pages
+                'X-TotalBooks' => $total_books,
+                'X-TotalPage' => $pages
             ]
         );
 
