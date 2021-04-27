@@ -24,7 +24,6 @@
         "@babel/plugin-transform-runtime": "^7.12.1",
         "@babel/runtime": "^7.12.1",
         "@fortawesome/fontawesome-free": "^5.15.3",
-        "air-datepicker": "^2.2.3",
         "babel-plugin-syntax-async-functions": "^6.13.0",
         "bootstrap": "^4.5.3",
         "bootstrap-select": "^1.13.18",

@@ -14,30 +14,30 @@
         <div class="p-5 inscription-part-right col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
 
             <h3 class="text-center pb-5 m-0">Créez votre compte</h3>
-            
+
             {{ form_start(form, {'attr' : {'class': 'form-signin d-flex flex-column justify-content-center align-items-center' }}) }}
 
-                {{ form_row(form.username, {'label' : false ,'attr' : {'class': 'form-control mb-4', 'placeholder' : 'Adresse mail', 'id' : 'inputUser'}}) }}
+                {{ form_row(form.username) }}
 
-                {{ form_row(form.password, {'label' : false ,'attr' : {'class': 'form-control mb-4', 'placeholder' : 'Mot de passe', 'id' : 'inputPassword'}}) }}
+                {{ form_row(form.password) }}
 
-                {{ form_row(form.confirm_password, {'label' : false ,'attr' : {'class': 'form-control mb-3', 'placeholder' : 'Confirmation du mot de passe', 'id' : 'inputConfirm'}}) }}
+                {{ form_row(form.confirm_password) }}
 
-                {{ form_row(form.gender, {'label' : false ,'attr' : {'class': 'register-gender mb-3', 'id' : 'radioMen'}}) }}
+                {{ form_row(form.gender) }}
 
-                <div class="d-flex justify-content-between mb-4 wrapper-lastname-firstname">
-                    {{ form_row(form.firstname, {'label' : false ,'attr' : {'class': 'form-control', 'placeholder' : 'Prénom', 'id' : 'inputFirstname'}}) }}
+                <div class="d-flex justify-content-between wrapper-lastname-firstname">
+                    {{ form_row(form.firstname) }}
 
-                    {{ form_row(form.lastname, {'label' : false ,'attr' : {'class': 'form-control', 'placeholder' : 'Nom', 'id' : 'inputLastname'}}) }}
-                </div>
-                                
-                <div class="wrapper-tel-birth d-flex justify-content-between mb-4">
-                    {{ form_row(form.tel, {'label' : false ,'attr' : {'class': 'form-control', 'placeholder' : 'Téléphone', 'id' : 'inputTel'}}) }}
-
-                    {{ form_row(form.birth, {'label' : false ,'attr' : {'placeholder' : 'Date de naissance' ,'class': 'form-control client-datepicker', 'id' : 'inputBirth', 'data-language' : 'fr', 'data-date-format' : 'dd-mm-yyyy'}}) }}
+                    {{ form_row(form.lastname) }}
                 </div>
 
-                <button class="btn-inscription btn btn-lg mt-2 px-3" type="submit">Inscription</button>
+                <div class="wrapper-tel-birth d-flex justify-content-between">
+                    {{ form_row(form.tel) }}
+
+                    {{ form_row(form.birth) }}
+                </div>
+
+                <button class="btn-inscription btn btn-lg m-3" type="submit">Inscription</button>
 
         {{ form_end(form) }}
 

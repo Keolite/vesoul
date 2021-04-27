@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class BookType extends AbstractType
 {
@@ -29,211 +29,241 @@ class BookType extends AbstractType
 
         $builder
             ->add(
-                'title', TextType::class, [
-                'label' => 'Titre',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                    'autofocus' => true,
-                ]
-                ]
-            )
-            ->add(
-                'author',  EntityType::class, [
-                'label' => 'Auteur',
-                'class' => Author::class,
-                'choice_label' =>  function (Author $author) {
-                    $first = $author->getFirstname();
-                    $last = $author->getLastname();
-                    $choices = $first. ' ' .$last;
-                    return $choices;
-                },
-                'query_builder' => function (EntityRepository $author) {
-                    return $author->createQueryBuilder('a')
-                        ->orderBy('a.firstname', 'ASC');
-                },
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'selectpicker form-control',
-                    'data-style' => 'btn-outline-secondary'
-                ]
+                'title',
+                TextType::class,
+                [
+                    'label' => 'Titre',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                        'autofocus' => true,
+                    ]
                 ]
             )
             ->add(
-                'genres', EntityType::class, [
-                'required' => false,
-                'multiple' => true,
-                'label' => 'Catégorie',
-                'class' => Genre::class,
-                'choice_label' =>  function (Genre $genre) {
-                    return $genre->getName();
-                },
-                'query_builder' => function (EntityRepository $genre) {
-                    return $genre->createQueryBuilder('g')
-                        ->orderBy('g.name', 'ASC');
-                },
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'selectpicker form-control',
-                    'data-style' => 'btn-outline-secondary',
-                    'title' => 'Choisissez ...'
-                ]
-                ]
-            )
-            ->add(
-                'stock', NumberType::class, [
-                'label' => 'Quantité',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control'
-                ]
+                'author',
+                EntityType::class,
+                [
+                    'label' => 'Auteur',
+                    'class' => Author::class,
+                    'choice_label' =>  function (Author $author) {
+                        $first = $author->getFirstname();
+                        $last = $author->getLastname();
+                        $choices = $first . ' ' . $last;
+                        return $choices;
+                    },
+                    'query_builder' => function (EntityRepository $author) {
+                        return $author->createQueryBuilder('a')
+                            ->orderBy('a.firstname', 'ASC');
+                    },
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'selectpicker form-control',
+                        'data-style' => 'btn-outline-secondary'
+                    ]
                 ]
             )
             ->add(
-                'price', NumberType::class, [
-                'label' => 'Prix',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control'
-                ]
-                ]
-            )
-            ->add(
-                'isbn', TextType::class, [
-                'label' => 'ISBN',
-                'label_attr' => [
-                    'class' => 'font-weight-bold',
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ]
-                ]
-            )
-            ->add(
-                'length', NumberType::class, [
-                'required' => false,
-                'label' => 'Nombre de pages',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ]
+                'genres',
+                EntityType::class,
+                [
+                    'required' => false,
+                    'multiple' => true,
+                    'label' => 'Catégorie',
+                    'class' => Genre::class,
+                    'choice_label' =>  function (Genre $genre) {
+                        return $genre->getName();
+                    },
+                    'query_builder' => function (EntityRepository $genre) {
+                        return $genre->createQueryBuilder('g')
+                            ->orderBy('g.name', 'ASC');
+                    },
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'selectpicker form-control',
+                        'data-style' => 'btn-outline-secondary',
+                        'title' => 'Choisissez ...'
+                    ]
                 ]
             )
             ->add(
-                'year', NumberType::class, [
-                'required' => false,
-                'label' => 'Année de sortie',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ]
-                ]
-            )
-            ->add(
-                'new', CheckboxType::class, [
-                'required' => false,
-                'label' => false,
-                'data' => false,
-                'value' => 0,
-                'attr' => [
-                    'class' => 'form-control',
-                ]
+                'stock',
+                NumberType::class,
+                [
+                    'label' => 'Quantité',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control'
+                    ]
                 ]
             )
             ->add(
-                'newbtn', ButtonType::class, [
-                'label'=> 'Nouveauté ?',
-                'attr' => [
-                    'class' => 'btn btn-outline-secondary',
-                ],
+                'price',
+                NumberType::class,
+                [
+                    'label' => 'Prix',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control'
+                    ]
                 ]
             )
             ->add(
-                'height', NumberType::class, [
-                'required' => false,
-                'label' => 'Hauteur',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ]
-                ]
-            )
-            ->add(
-                'width', NumberType::class, [
-                'required' => false,
-                'label' => 'Largeur',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ]
+                'isbn',
+                TextType::class,
+                [
+                    'label' => 'ISBN',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold',
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ]
                 ]
             )
             ->add(
-                'description', TextareaType::class, [
-                'label' => 'Description',
-                'label_attr' => [
-                    'class' => 'font-weight-bold'
-                ],
-                'attr' => [
-                    'class' => 'form-control',
-                ]
+                'length',
+                NumberType::class,
+                [
+                    'required' => false,
+                    'label' => 'Nombre de pages',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ]
                 ]
             )
             ->add(
-                'images', FileType::class, [
-                'required' => false,
-                'label_attr' => [
-                    'class' => 'custom-file-label',
-                    'lang' => 'fr',
-                ],
-                'attr' => [
-                    'class' => 'custom-file-input',
-                    'accept' => '.jpg, .jpeg, .png',
-                ],
-                'multiple' => true,
-                'mapped' => false,
-                'constraints' => [
-                    new Count(['max' => 3]),
-                    new All(
-                        [
-                        new File(
+                'date',
+                DateType::class,
+                [
+                    'label' => 'Date de sortie',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control'
+                    ],
+                    'widget' => 'single_text'
+                ]
+            )
+            ->add(
+                'new',
+                CheckboxType::class,
+                [
+                    'required' => false,
+                    'label' => false,
+                    'data' => false,
+                    'value' => 0,
+                    'attr' => [
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'newbtn',
+                ButtonType::class,
+                [
+                    'label' => 'Nouveauté ?',
+                    'attr' => [
+                        'class' => 'btn btn-outline-secondary',
+                    ],
+                ]
+            )
+            ->add(
+                'height',
+                NumberType::class,
+                [
+                    'required' => false,
+                    'label' => 'Hauteur',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'width',
+                NumberType::class,
+                [
+                    'required' => false,
+                    'label' => 'Largeur',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'description',
+                TextareaType::class,
+                [
+                    'label' => 'Description',
+                    'label_attr' => [
+                        'class' => 'font-weight-bold'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'images',
+                FileType::class,
+                [
+                    'required' => false,
+                    'label_attr' => [
+                        'class' => 'custom-file-label',
+                        'lang' => 'fr',
+                    ],
+                    'attr' => [
+                        'class' => 'custom-file-input',
+                        'accept' => '.jpg, .jpeg, .png',
+                    ],
+                    'multiple' => true,
+                    'mapped' => false,
+                    'constraints' => [
+                        new Count(['max' => 3]),
+                        new All(
                             [
-                            'maxSize' => '5M',
-                            'mimeTypes' => [
-                                'image/jpeg',
-                                'image/png'
-                            ]
+                                new File(
+                                    [
+                                        'maxSize' => '5M',
+                                        'mimeTypes' => [
+                                            'image/jpeg',
+                                            'image/png'
+                                        ]
+                                    ]
+                                )
                             ]
                         )
-                        ]
-                    )
-                ],
+                    ],
                 ]
             )
             ->add(
-                'submit', SubmitType::class, [
-                'label' => 'Enregistrer',
-                'attr' => [
-                    'class' => 'btn btn-secondary text-light m-2'
-                ]
+                'submit',
+                SubmitType::class,
+                [
+                    'label' => 'Enregistrer',
+                    'attr' => [
+                        'class' => 'btn btn-secondary text-light m-2'
+                    ]
                 ]
             );
     }

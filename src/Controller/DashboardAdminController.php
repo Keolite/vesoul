@@ -65,12 +65,13 @@ class DashboardAdminController extends AbstractController
     public function books(): Response
     {
         $criteria = Criteria::create()
-            ->orderBy(['year' => 'DESC']);
+            ->orderBy(['date' => 'DESC']);
 
         return $this->render(
-            'dashboard-admin/books.html.twig', [
-            'title' => 'Livres',
-            'books' => $this->repoBook->matching($criteria)
+            'dashboard-admin/books.html.twig',
+            [
+                'title' => 'Livres',
+                'books' => $this->repoBook->matching($criteria)
             ]
         );
     }
@@ -82,19 +83,19 @@ class DashboardAdminController extends AbstractController
      * @param  Request $request
      * @return Response
      */
-    public function addBook(Request $request) : Response
+    public function addBook(Request $request): Response
     {
         $book = new Book();
         $form = $this->createForm(BookType::class, $book);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             // get uploaded images
             $images = $form->get('images')->getData();
 
             // TODO: allow 3 images only per book
             // For each image uploaded
-            foreach($images as $image){
+            foreach ($images as $image) {
                 // give them uniq filenames
                 $file = md5(uniqid()) . '.' . $image->guessExtension();
 
@@ -105,16 +106,14 @@ class DashboardAdminController extends AbstractController
                         $file
                     );
                 } catch (FileException $e) {
-                    // TODO: handle caught error message
-                    $e->getMessage();
+                    $this->addFlash('danger', $e->getMessage());
                 }
 
                 // link image file to an Image object
                 $img = new Image();
                 $img->setName($file);
                 $img->setUrl(
-                    $this
-                    ->getParameter('images_directory') . '/' . $file
+                    $this->getParameter('images_directory') . '/' . $file
                 );
 
                 // and link it with book
@@ -129,9 +128,10 @@ class DashboardAdminController extends AbstractController
         }
 
         return $this->render(
-            'dashboard-admin/book-crud/add-book.html.twig', [
-            'title' => 'Ajouter un livre',
-            'form' => $form->createView()
+            'dashboard-admin/book-crud/add-book.html.twig',
+            [
+                'title' => 'Ajouter un livre',
+                'form' => $form->createView()
             ]
         );
     }
@@ -163,7 +163,7 @@ class DashboardAdminController extends AbstractController
         foreach ($images as $image) {
             $filename = $image->getName();
             $file = $this
-                ->getParameter('images_directory') . '/' .$filename;
+                ->getParameter('images_directory') . '/' . $filename;
 
             if (is_file($file)) {
                 unlink($file);
@@ -201,7 +201,7 @@ class DashboardAdminController extends AbstractController
             $images = $form->get('images')->getData();
 
             // For each image uploaded
-            foreach ($images as $image){
+            foreach ($images as $image) {
                 // rename with uniq id
                 $file = md5(uniqid()) . '.' . $image->guessExtension();
 
@@ -221,7 +221,7 @@ class DashboardAdminController extends AbstractController
                 $img->setName($file);
                 $img->setUrl(
                     $this
-                    ->getParameter('images_directory') . '/' . $file
+                        ->getParameter('images_directory') . '/' . $file
                 );
                 $book->addImage($img);
             }
@@ -237,10 +237,11 @@ class DashboardAdminController extends AbstractController
 
         // render the page
         return $this->render(
-            'dashboard-admin/book-crud/edit-book.html.twig', [
-            'title' => 'Modifier un livre',
-            'images' => $img_collection,
-            'form' => $form->createView() //Display the form
+            'dashboard-admin/book-crud/edit-book.html.twig',
+            [
+                'title' => 'Modifier un livre',
+                'images' => $img_collection,
+                'form' => $form->createView() //Display the form
             ]
         );
     }
@@ -260,10 +261,9 @@ class DashboardAdminController extends AbstractController
 
         // if csrf is ok...
         if ($this->isCsrfTokenValid(
-            'delete'.$image->getId(),
+            'delete' . $image->getId(),
             $data['_token']
-        )
-        ) {
+        )) {
             // get image filename
             $file = $image->getName();
 
@@ -283,8 +283,9 @@ class DashboardAdminController extends AbstractController
             // Todo: add bootstrap toast
             return new JsonResponse(
                 [
-                'success' => 1
-                ], 200
+                    'success' => 1
+                ],
+                200
             );
 
             // if csrf is not a valid one, send error message accordingly
@@ -322,19 +323,19 @@ class DashboardAdminController extends AbstractController
                 // (for the browser only Id is unknown, but why not ?!)
                 return new JsonResponse(
                     [
-                    'success' => 1,
-                    'firstname' => $author->getFirstname(),
-                    'lastname' => $author->getLastname(),
-                    'author_id' => $author->getId()
-                    ], 200
+                        'success' => 1,
+                        'firstname' => $author->getFirstname(),
+                        'lastname' => $author->getLastname(),
+                        'author_id' => $author->getId()
+                    ],
+                    200
                 );
 
                 // say if something went wrong
             } catch (Exception $e) {
                 return new JsonResponse(
                     [
-                    'error' => $e
-                    , 400
+                        'error' => $e, 400
                     ]
                 );
             }
@@ -343,8 +344,7 @@ class DashboardAdminController extends AbstractController
         } else {
             return new JsonResponse(
                 [
-                'error' => 'csrf token invalid'
-                , 400
+                    'error' => 'csrf token invalid', 400
                 ]
             );
         }
@@ -363,7 +363,7 @@ class DashboardAdminController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         // if addgenre csrf token is ok...
-        if($this->isCsrfTokenValid('addgenre', $data['_token'])) {
+        if ($this->isCsrfTokenValid('addgenre', $data['_token'])) {
 
             // try to add a genre in db
             try {
@@ -376,18 +376,18 @@ class DashboardAdminController extends AbstractController
                 // and return success and infos (even if only id is really needed for js)
                 return new JsonResponse(
                     [
-                    'success' => 1,
-                    'genre' => $genre->getName(),
-                    'genre_id' => $genre->getId()
-                    ], 200
+                        'success' => 1,
+                        'genre' => $genre->getName(),
+                        'genre_id' => $genre->getId()
+                    ],
+                    200
                 );
 
                 // say if something went wrong
             } catch (Exception $e) {
                 return new JsonResponse(
                     [
-                    'error' => $e
-                    , 400
+                        'error' => $e, 400
                     ]
                 );
             }
@@ -396,8 +396,7 @@ class DashboardAdminController extends AbstractController
         } else {
             return new JsonResponse(
                 [
-                'error' => 'csrf token invalid'
-                , 400
+                    'error' => 'csrf token invalid', 400
                 ]
             );
         }
@@ -415,32 +414,35 @@ class DashboardAdminController extends AbstractController
     {
         $orders = $this->orderRepo->findBy(
             [
-            'status' => [
-                Order::STATUS_NEW_ORDER,
-                Order::STATUS_ORDER_FULLFILLED
-            ]], [
-            'id' => 'DESC'
+                'status' => [
+                    Order::STATUS_NEW_ORDER,
+                    Order::STATUS_ORDER_FULLFILLED
+                ]
+            ],
+            [
+                'id' => 'DESC'
             ]
         );
 
         // find new/fulfilled (already sent to customers) orders quantity
         $new = $this->orderRepo->findBy(
             [
-            'status' => Order::STATUS_NEW_ORDER
+                'status' => Order::STATUS_NEW_ORDER
             ]
         );
 
         $fulfilled = $this->orderRepo->findBy(
             [
-            'status' => Order::STATUS_ORDER_FULLFILLED
+                'status' => Order::STATUS_ORDER_FULLFILLED
             ]
         );
 
         return $this->render(
-            'dashboard-admin/orders.html.twig', [
-            'orders' => $orders,
-            'new' => $new,
-            'fulfilled' => $fulfilled
+            'dashboard-admin/orders.html.twig',
+            [
+                'orders' => $orders,
+                'new' => $new,
+                'fulfilled' => $fulfilled
             ]
         );
     }
@@ -459,13 +461,11 @@ class DashboardAdminController extends AbstractController
 
             $this->manager->persist($order);
             $this->manager->flush();
-
         } else {
             $this->addFlash('info', "Cette commande ne peut être validée");
         }
 
         return $this->redirectToRoute('dashboard_admin_orders');
-
     }
 
 
@@ -485,7 +485,6 @@ class DashboardAdminController extends AbstractController
 
             $this->manager->persist($order);
             $this->manager->flush();
-
         } else {
             $this->addFlash('info', "Cette commande ne peut être annulée");
         }
@@ -505,8 +504,9 @@ class DashboardAdminController extends AbstractController
 
         // Retrieve the HTML generated in our twig file
         $html = $this->renderView(
-            'bill/bill.html.twig', [
-            'order' => $order,
+            'bill/bill.html.twig',
+            [
+                'order' => $order,
             ]
         );
 
@@ -520,8 +520,9 @@ class DashboardAdminController extends AbstractController
 
         // Output the generated PDF to Browser (force download)
         $dompdf->stream(
-            "Facture-" . $order->getId() . ".pdf", [
-            "Attachment" => true
+            "Facture-" . $order->getId() . ".pdf",
+            [
+                "Attachment" => true
             ]
         );
 
@@ -542,9 +543,10 @@ class DashboardAdminController extends AbstractController
         $admin = $this->adminRepo->findBy(['role' => 'ROLE_ADMIN']);
 
         return $this->render(
-            'dashboard-admin/info.html.twig', [
-            'title' => 'Information Boutique',
-            'admin' => $admin
+            'dashboard-admin/info.html.twig',
+            [
+                'title' => 'Information Boutique',
+                'admin' => $admin
             ]
         );
     }
@@ -556,10 +558,10 @@ class DashboardAdminController extends AbstractController
     public function mentions(): Response
     {
         return $this->render(
-            'dashboard-admin/mentions.html.twig', [
-            'title' => 'Mentions légales',
+            'dashboard-admin/mentions.html.twig',
+            [
+                'title' => 'Mentions légales',
             ]
         );
     }
-
 }

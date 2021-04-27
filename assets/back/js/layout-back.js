@@ -3,7 +3,6 @@ import 'popper.js';
 import 'bootstrap';
 import 'bootstrap-select/js/bootstrap-select';
 import 'slick-carousel';
-import 'air-datepicker';
 import '@fortawesome/fontawesome-free';
 
 import '../css/main-back.scss';

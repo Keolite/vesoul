@@ -10,6 +10,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RegisterType extends AbstractType
 {
@@ -17,25 +19,99 @@ class RegisterType extends AbstractType
     {
         $builder
             ->add(
-                'gender', ChoiceType::class, [
-                'data' => 0,
-                'choices' => [ 'Homme' => 0, 'Femme' => 1],
-                'expanded' => true,
-                'label' => 'Civilités'
+                'username',
+                EmailType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Adresse mail',
+                        'class' => 'form-control',
+                    ]
                 ]
             )
-            ->add('firstname')
-            ->add('lastname')
-            ->add('password', PasswordType::class)
-            ->add('confirm_password', PasswordType::class)
-            ->add('username', EmailType::class)
-            ->add('tel')
             ->add(
-                'birth', DateType::class, [
-                'html5' => false,
-                'widget' => 'single_text',
-                'format' => 'dd-mm-yyyy',
+                'password',
+                PasswordType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Mot de passe',
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'confirm_password',
+                PasswordType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Confirmation du mot de passe',
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'firstname',
+                TextType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Prénom',
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'lastname',
+                TextType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Nom',
+                        'class' => 'form-control',
+                    ]
+                ]
+            )
+            ->add(
+                'gender',
+                ChoiceType::class,
+                [
+                    'label' => false,
+                    'attr' =>
+                    [
+                        'class' => 'register-gender mb-3'
+                    ],
+                    'data' => 0,
+                    'choices' => [
+                        'Homme' => 0,
+                        'Femme' => 1
+                    ],
+                    'expanded' => true,
+                ]
+            )
+            ->add(
+                'tel',
+                TelType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Télephone',
+                        'class' => 'form-control',
+                    ]
+                ]
 
+            )
+            ->add(
+                'birth',
+                DateType::class,
+                [
+                    'label' => false,
+                    'attr' => [
+                        'placeholder' => 'Date de naissance',
+                        'class' => 'form-control',
+                    ],
+                    'widget' => 'single_text'
                 ]
             );
     }
