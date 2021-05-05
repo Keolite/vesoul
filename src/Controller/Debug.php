@@ -46,7 +46,7 @@ class Debug extends AbstractController
             ->context([
                 'firstname' =>  $this->getUser()->getFirstname()
             ])
-            ->htmlTemplate('email/confirm.html.twig');
+            ->htmlTemplate('email/user_registration_confirmation.html.twig');
 
         try {
             $this->mailer->send($mail);

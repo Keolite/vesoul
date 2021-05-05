@@ -557,7 +557,7 @@ class VesoulEditionController extends AbstractController
 
         // render last order infos/confirmation
         return $this->render(
-            'vesoul-edition/confirmation.html.twig',
+            'vesoul-edition/order/confirmation.html.twig',
             [
                 'order' => $order
             ]

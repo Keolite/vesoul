@@ -87,12 +87,13 @@ class DashboardUserController extends AbstractController
 
         // render default template
         return $this->render(
-            'dashboard-user/mon-compte.html.twig', [
-            'title' => 'Mon compte',
-            'user' => $user,
-            'form' => $form->createView(),
-            'form_password' => $changePassword->createView(),
-            'cart' => $cart,
+            'dashboard-user/infos_panel.html.twig',
+            [
+                'title' => 'Mon compte',
+                'user' => $user,
+                'form' => $form->createView(),
+                'form_password' => $changePassword->createView(),
+                'cart' => $cart,
             ]
         );
     }
@@ -153,11 +154,12 @@ class DashboardUserController extends AbstractController
 
         // render template
         return $this->render(
-            'dashboard-user/mon-compte.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
-            'form_password' => $changePassword->createView(),
-            'cart' => $cart
+            'dashboard-user/infos_panel.html.twig',
+            [
+                'user' => $user,
+                'form' => $form->createView(),
+                'form_password' => $changePassword->createView(),
+                'cart' => $cart
             ]
         );
     }
@@ -195,10 +197,11 @@ class DashboardUserController extends AbstractController
         }
 
         return $this->render(
-            'dashboard-user/compte-adresses.html.twig', [
-            'adresses' => $this->addressRepo->findBy(['user' => $user]),
-            'formNew' => $formNew->createView(),
-            'cart' => $cart
+            'dashboard-user/address_panel.html.twig',
+            [
+                'adresses' => $this->addressRepo->findBy(['user' => $user]),
+                'formNew' => $formNew->createView(),
+                'cart' => $cart
             ]
         );
     }
@@ -238,10 +241,9 @@ class DashboardUserController extends AbstractController
             $this->em->flush();
 
             return $this->redirectToRoute('dashboard_user_addresses');
-
         } else {
 
-            Return new Response("Not Found", Response::HTTP_NOT_FOUND);
+            return new Response("Not Found", Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -262,12 +264,10 @@ class DashboardUserController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Adresse supprimée !');
             return $this->redirectToRoute('dashboard_user_addresses');
-
         } else if (!$address->getUser() === $user) {
             throw new AccessDeniedException(AccessDeniedException::class);
-
         } else {
-            Return new Response("Not Found", Response::HTTP_NOT_FOUND);
+            return new Response("Not Found", Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -288,18 +288,19 @@ class DashboardUserController extends AbstractController
         $user = $this->getUser();
         $orders = $this->orderRepo->findBy(
             [
-            'user' => $user,
-            'status' => [
-                Order::STATUS_NEW_ORDER,
-                Order::STATUS_ORDER_FULLFILLED
-            ]
+                'user' => $user,
+                'status' => [
+                    Order::STATUS_NEW_ORDER,
+                    Order::STATUS_ORDER_FULLFILLED
+                ]
             ]
         );
 
         return $this->render(
-            'dashboard-user/orders.html.twig', [
-            'user' => $user,
-            'orders' => $orders
+            'dashboard-user/orders_panel.html.twig',
+            [
+                'user' => $user,
+                'orders' => $orders
             ]
         );
     }
@@ -320,8 +321,9 @@ class DashboardUserController extends AbstractController
 
         // Retrieve the HTML generated in our twig file
         $html = $this->renderView(
-            'bill/bill.html.twig', [
-            'order' => $order,
+            'bill/bill.html.twig',
+            [
+                'order' => $order,
             ]
         );
 
@@ -334,13 +336,12 @@ class DashboardUserController extends AbstractController
 
         // Output the generated PDF to Browser (force download)
         $dompdf->stream(
-            "Facture-" . $order->getId() . ".pdf", [
-            "Attachment" => true
+            "Facture-" . $order->getId() . ".pdf",
+            [
+                "Attachment" => true
             ]
         );
 
         return $this->redirectToRoute('dashboard_user_print_bill');
-
     }
-
 }

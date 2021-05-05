@@ -82,7 +82,7 @@ class MailManager
             ->context([
                 'firstname' => $user->getFirstname()
             ])
-            ->htmlTemplate('email/confirm.html.twig');
+            ->htmlTemplate('email/user_registration_confirmation.html.twig');
 
         $this->mailer->send($mail);
     }

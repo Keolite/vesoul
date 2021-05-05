@@ -79,8 +79,7 @@ class SecurityController extends AbstractController
     public function registration(Request $request)
     {
         $user = new User();
-        $form = $this->createForm(RegisterType::class, $user)
-            ->handleRequest($request);
+        $form = $this->createForm(RegisterType::class, $user)->handleRequest($request);
         $cart = $this->cartManager->getCurrentCart();
 
 
@@ -107,7 +106,7 @@ class SecurityController extends AbstractController
         }
 
         return $this->render(
-            'security/inscription.html.twig',
+            'security/registration.html.twig',
             [
                 'form' => $form->createView(),
                 'cart' => $cart
