@@ -63,9 +63,15 @@
             </div>
 
             <p id="description">{{ book.description }}</p>
+
+            <div>
+                <p class="legend m-0 pr-2">Nombre de pages : </p>
+                <p class="m-0">{{ book.length }}</p>
+            </div>
+
             <div>
                 <p class="legend m-0 pr-2">Dimensions : </p>
-                <p class="m-0">{{ book.length }} x {{ book.width }} cm</p>
+                <p class="m-0">{{ book.height }} x {{ book.width }} cm</p>
             </div>
 
             <div>
